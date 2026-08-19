@@ -53,4 +53,21 @@ confirma modo oscuro como definitivo (no se vuelve a redecidir):
   dona semanal), recetario (buscador + grid con fotos), escaneo (cámara + detección en vivo),
   desglose de plato (foto + panel glass de macros/ingredientes), onboarding con el aguacate.
 
-## Idioma UI: español latino neutro · Fecha de cierre: BORRADOR — modo oscuro + glass + mascota 3D reconfirmados 2026-08-19 con referencia explícita del usuario · Aprobada por el usuario: SÍ (contrato fiel)
+## Actualización de referencia (2026-08-19, tercera vuelta) — CONTRATO DEFINITIVO, YA NO SE REDECIDE
+El usuario dio un nuevo prompt de referencia: "3D luminous glassmorphism" sobre fondo BLANCO
+estéril, no oscuro. Reemplaza la vuelta anterior (oscuro). El usuario confirmó explícitamente
+que esta es la dirección DEFINITIVA — no se vuelve a alternar entre claro/oscuro.
+- Modo: CLARO, fondo blanco/gris muy claro casi estéril — DEFINITIVO.
+- Device de superficie: glass luminoso — paneles translúcidos con borde biselado que brilla
+  (glow de color sutil en el borde, no solo blur), no glass plano.
+- Acentos: naranja vibrante (calorías/CTAs) + verde salud (progreso/checks/métricas) — dos
+  acentos, no uno solo (excepción justificada: uno es "acción/dato", el otro es "salud/logro").
+- Anillos de progreso: "3D luminosos" — con resplandor de color alrededor del anillo, no plano.
+- Logo: manzana estilizada simple (glifo geométrico, no ilustración detallada).
+- Mascota 3D (aguacate/brócoli tierno): se mantiene SOLO para momentos de logro/racha
+  (insignia con trofeo), igual que antes solo en onboarding — nunca sobre la comida del día a día.
+- 4 pantallas ancla de este prompt: dashboard (con logo + 3 anillos + comida reciente), escaneo
+  con etiquetas flotantes por ingrediente, análisis detallado del plato, racha/progreso con
+  gráfica de línea + insignia de logro con mascota.
+
+## Idioma UI: español latino neutro · Fecha de cierre: CERRADO — modo CLARO + glass luminoso + naranja/verde, definitivo 2026-08-19 · Aprobada por el usuario: SÍ, explícitamente definitivo (no se vuelve a alternar)

@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Calofit AI — 3D Luminous Glassmorphism (definitivo)</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --bg: #F7F8FA; --bg-2: #FFFFFF;
+    --text-1: #1B2024; --text-2: #7A8390;
+    --accent: #FF7A1F; --accent-2: #FF9B49;
+    --verde: #34C759; --verde-2: #6FE08C;
+    --proteina: #34C759; --carbos: #FF7A1F; --grasas: #4FA8E0;
+    --radius-card: 26px; --radius-btn: 999px;
+    --font-display: 'Sora', sans-serif; --font-body: 'Plus Jakarta Sans', sans-serif;
+    --glass-bg: rgb(255 255 255 / 0.62);
+    --glass-brd: rgb(255 255 255 / 0.9);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg); color: var(--text-1); font-family: var(--font-body);
+    padding: 32px 20px 72px;
+  }
+  .cabecera { max-width: 1280px; margin: 0 auto 28px; }
+  .cabecera h1 { font-family: var(--font-display); font-size: 26px; font-weight: 800; letter-spacing: -0.01em; color: #14181c; }
+  .cabecera p { margin-top: 8px; font-size: 14px; color: var(--text-2); max-width: 78ch; line-height: 1.6; }
+  .cabecera .tag { display: inline-flex; margin-top: 14px; align-items: center; gap: 6px; font-size: 12.5px;
+    font-weight: 700; color: #B85400; border: 1px solid rgb(255 122 31 / 0.3); background: rgb(255 122 31 / 0.08);
+    padding: 6px 12px; border-radius: 999px; }
+
+  .galeria { max-width: 1280px; margin: 0 auto; display: flex; gap: 26px; overflow-x: auto; padding: 8px 4px 20px; scroll-snap-type: x proximity; }
+  .tarjeta { flex: 0 0 300px; scroll-snap-align: start; display: flex; flex-direction: column; gap: 14px; }
+  .tarjeta h2 { font-family: var(--font-display); font-size: 17px; font-weight: 800; line-height: 1.25; text-align: center; color: #14181c; }
+
+  .telefono {
+    width: 300px; aspect-ratio: 9/19.5; border-radius: 44px; overflow: hidden; position: relative;
+    background:
+      radial-gradient(420px 260px at 15% 0%, rgb(255 154 73 / 0.16) 0%, transparent 60%),
+      radial-gradient(380px 260px at 100% 30%, rgb(52 199 89 / 0.14) 0%, transparent 60%),
+      var(--bg-2);
+    box-shadow: 0 0 0 9px #101317, 0 26px 60px rgb(20 20 24 / 0.28);
+    display: flex; flex-direction: column;
+  }
+  .statusbar { display:flex; align-items:center; justify-content:space-between; padding:12px 20px 4px;
+    font-size:12.5px; font-weight:700; color:var(--text-1); position:relative; z-index:3; }
+  .statusbar .der { display:flex; align-items:center; gap:5px; }
+  .home-indicator { position:absolute; bottom:7px; left:50%; transform:translateX(-50%); width:112px; height:5px;
+    border-radius:999px; background:var(--text-1); opacity:0.75; z-index:3; }
+  .pantalla { flex:1; position:relative; overflow:hidden; padding:0 14px; display:flex; flex-direction:column; }
+  .pantalla > * { position:relative; z-index:1; }
+  .foto-bg { position:absolute; inset:0; z-index:0; }
+
+  /* ── El device de esta referencia: vidrio LUMINOSO — borde biselado que brilla, no solo blur ── */
+  .glass {
+    background: var(--glass-bg); backdrop-filter: blur(18px) saturate(160%); -webkit-backdrop-filter: blur(18px) saturate(160%);
+    border-radius: var(--radius-card); position: relative;
+    border: 1px solid var(--glass-brd);
+    box-shadow:
+      0 14px 34px -10px rgb(20 30 40 / 0.14),
+      inset 0 1px 0 rgb(255 255 255 / 0.95),
+      inset 0 0 0 1px rgb(255 255 255 / 0.5);
+  }
+  .glass.glow-naranja { box-shadow: 0 14px 34px -10px rgb(20 30 40/.14), inset 0 1px 0 rgb(255 255 255/.95), 0 0 0 1px rgb(255 154 73/.35), 0 0 26px -4px rgb(255 122 31/.35); }
+  .glass.glow-verde { box-shadow: 0 14px 34px -10px rgb(20 30 40/.14), inset 0 1px 0 rgb(255 255 255/.95), 0 0 0 1px rgb(52 199 89/.3), 0 0 22px -4px rgb(52 199 89/.35); }
+
+  .logo-row { display:flex; align-items:center; justify-content:space-between; padding-top:14px; }
+  .logo { display:flex; align-items:center; gap:7px; font-family:var(--font-display); font-weight:800; font-size:13.5px; }
+
+  /* ── 1. Dashboard ── */
+  .kcal-card { margin-top:14px; padding:20px; text-align:center; }
+  .kcal-card .num { font-family:var(--font-display); font-size:38px; font-weight:800; color:var(--accent); line-height:1; }
+  .kcal-card .lbl { font-size:11.5px; color:var(--text-2); font-weight:700; margin-top:4px; }
+  .anillo-mini-row { display:flex; gap:8px; margin-top:10px; }
+  .anillo-mini { flex:1; padding:12px 6px; text-align:center; }
+  .ring3d { width:44px; height:44px; border-radius:50%; margin:0 auto 6px; position:relative; }
+  .ring3d::before { content:''; position:absolute; inset:6px; border-radius:50%; background:#fff; }
+  .anillo-mini b { font-size:12.5px; display:block; }
+  .anillo-mini span { font-size:9.5px; color:var(--text-2); font-weight:700; }
+  .recientes-tit { margin-top:14px; font-size:11.5px; font-weight:800; color:var(--text-2); letter-spacing:0.02em; }
+  .comida-reciente { margin-top:8px; padding:10px; display:flex; align-items:center; gap:10px; }
+  .comida-foto { width:46px; height:46px; border-radius:14px; flex-shrink:0; }
+  .comida-info b { font-size:12.5px; display:block; }
+  .comida-info span { font-size:10px; color:var(--text-2); }
+  .comida-kcal { margin-left:auto; font-size:12.5px; font-weight:800; color:var(--accent); }
+
+  /* ── 2. Escaneo ── */
+  .visor-corner { position:absolute; width:20px; height:20px; z-index:2; }
+  .visor-corner.tl { top:64px; left:6px; border-top:3px solid #fff; border-left:3px solid #fff; border-radius:6px 0 0 0; }
+  .visor-corner.tr { top:64px; right:6px; border-top:3px solid #fff; border-right:3px solid #fff; border-radius:0 6px 0 0; }
+  .visor-corner.bl { bottom:110px; left:6px; border-bottom:3px solid #fff; border-left:3px solid #fff; border-radius:0 0 0 6px; }
+  .visor-corner.br { bottom:110px; right:6px; border-bottom:3px solid #fff; border-right:3px solid #fff; border-radius:0 0 6px 0; }
+  .etiqueta-flot { position:absolute; z-index:2; padding:5px 10px; font-size:10px; font-weight:800; white-space:nowrap; display:flex; flex-direction:column; }
+  .etiqueta-flot span { font-weight:600; color:var(--text-2); font-size:9px; }
+  .shutter-wrap { position:absolute; bottom:24px; left:50%; transform:translateX(-50%); z-index:2; }
+  .shutter { width:64px; height:64px; border-radius:50%; background:radial-gradient(circle at 35% 30%, #fff, #eef1f4);
+    box-shadow: 0 0 0 4px rgb(255 255 255/.6), 0 0 24px 4px rgb(255 122 31/.45), 0 0 24px 8px rgb(52 199 89/.25), 0 10px 22px rgb(0 0 0/.2);
+    border: 3px solid transparent; background-clip: padding-box; }
+
+  /* ── 2b. Recetario ── */
+  .buscador-glass { margin-top:12px; padding:0 14px; height:44px; display:flex; align-items:center; gap:8px; }
+  .buscador-glass span { font-size:12.5px; color:var(--text-2); }
+  .categorias { display:flex; gap:7px; margin-top:12px; }
+  .cat-pill { padding:6px 13px; border-radius:999px; font-size:11px; font-weight:700; background:#EEF0F3; color:var(--text-2); }
+  .cat-pill.on { background:var(--accent); color:#fff; box-shadow:0 6px 16px -4px rgb(255 122 31/.55); }
+  .grid-recetas { display:grid; grid-template-columns:1fr 1fr; gap:9px; margin-top:12px; }
+  .receta-glass { border-radius:18px; overflow:hidden; position:relative; height:100px; }
+  .receta-glass .kcal-badge { position:absolute; bottom:6px; left:6px; right:6px; padding:5px 8px; font-size:10px; font-weight:800; color:#14181c; }
+
+  /* ── 3. Análisis detallado ── */
+  .analisis-panel { position:absolute; bottom:14px; left:14px; right:14px; z-index:2; padding:16px; max-height:230px; overflow:hidden; }
+  .analisis-panel .tit { font-size:15px; font-weight:800; }
+  .analisis-panel .sub { font-size:10.5px; color:var(--text-2); margin-top:2px; }
+  .mb-row { display:flex; align-items:center; gap:8px; margin-top:9px; }
+  .mb-row .lbl { font-size:10px; width:50px; color:var(--text-2); font-weight:700; }
+  .mb-track { flex:1; height:7px; border-radius:999px; background:#EEF0F3; overflow:hidden; }
+  .mb-fill { height:100%; border-radius:999px; }
+  .mb-row .pct { font-size:10px; font-weight:800; width:26px; text-align:right; }
+  .ingr-scroll { margin-top:10px; display:flex; flex-direction:column; gap:6px; }
+  .ingr-scroll li { list-style:none; font-size:10.5px; color:var(--text-2); display:flex; justify-content:space-between; border-bottom:1px solid #EEF0F3; padding-bottom:5px; }
+  .ingr-scroll li b { color:var(--text-1); font-weight:700; }
+
+  /* ── 4. Progreso y racha ── */
+  .graf-card { margin-top:14px; padding:16px; }
+  .graf-card .tit { font-size:11px; font-weight:800; color:var(--text-2); }
+  .graf-card .peso { font-family:var(--font-display); font-size:22px; font-weight:800; margin-top:2px; }
+  .linea-svg { margin-top:10px; }
+  .badge-card { margin-top:14px; padding:18px; text-align:center; }
+  .badge-card .titulo { font-size:12px; font-weight:800; color:var(--text-2); }
+  .trofeo-wrap { margin-top:10px; display:flex; justify-content:center; }
+  .badge-card .logro { margin-top:10px; font-size:13.5px; font-weight:800; }
+  .badge-card .sub { font-size:10.5px; color:var(--text-2); margin-top:2px; }
+
+  /* ── 5. Onboarding — mascota 3D ── */
+  .ob-tit { font-family:var(--font-display); font-size:16.5px; font-weight:800; line-height:1.3; padding-top:16px; }
+  .ob-check { margin-top:16px; padding:14px; display:flex; flex-direction:column; gap:11px; }
+  .ob-item { display:flex; align-items:center; gap:10px; font-size:11.5px; color:var(--text-2); font-weight:600; }
+  .ob-item.done { color:var(--text-1); }
+  .ob-mark { width:19px; height:19px; border-radius:50%; flex-shrink:0; display:flex; align-items:center; justify-content:center; }
+  .ob-item.done .ob-mark { background:var(--verde); }
+  .ob-item.now .ob-mark { border:2px solid var(--accent-2); border-top-color:transparent; animation:girar 0.9s linear infinite; }
+  .ob-item.pend .ob-mark { border:2px solid #E3E6EA; }
+  @keyframes girar { to { transform:rotate(360deg); } }
+  .avocado-wrap2 { margin-top:auto; display:flex; justify-content:center; padding-bottom:10px; }
+
+  @media (max-width: 640px) { .galeria { gap:16px; } .tarjeta { flex-basis:82vw; } .telefono { width:100%; } }
+</style>
+</head>
+<body>
+
+  <div class="cabecera">
+    <h1>Calofit AI — 3D Luminous Glassmorphism</h1>
+    <p>Dirección definitiva: fondo blanco estéril, vidrio luminoso con borde biselado que brilla (no solo blur plano),
+      naranja para calorías/acción y verde para progreso/salud, anillos con resplandor 3D. Esta versión REEMPLAZA
+      la interpretación oscura anterior — queda cerrada, no se vuelve a alternar entre claro/oscuro.</p>
+    <span class="tag">● Modo claro + glass luminoso — DEFINITIVO</span>
+  </div>
+
+  <div class="galeria">
+
+    <!-- 1. DASHBOARD -->
+    <div class="tarjeta">
+      <h2>Dashboard — tu día,<br>de un vistazo</h2>
+      <div class="telefono">
+        <div class="statusbar"><span>9:41</span><span class="der">
+          <svg width="16" height="10" viewBox="0 0 17 11" fill="currentColor"><rect x="0" y="7" width="3" height="4" rx="0.8"/><rect x="4.5" y="5" width="3" height="6" rx="0.8"/><rect x="9" y="3" width="3" height="8" rx="0.8"/><rect x="13.5" y="0.5" width="3" height="10.5" rx="0.8"/></svg>
+          <svg width="23" height="11" viewBox="0 0 25 12"><rect x="0.5" y="0.5" width="21" height="11" rx="3" fill="none" stroke="currentColor" opacity="0.4"/><rect x="2" y="2" width="15" height="8" rx="1.6" fill="currentColor"/></svg>
+        </span></div>
+        <div class="pantalla">
+          <div class="logo-row">
+            <div class="logo">
+              <svg width="20" height="20" viewBox="0 0 40 40">
+                <defs><linearGradient id="mzGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#FF9B49"/><stop offset="100%" stop-color="#FF7A1F"/></linearGradient></defs>
+                <path d="M20 14c-7 0-11 6-11 13 0 8 5 12 8 12 2 0 3-1 5-1s3 1 5 1c3 0 8-5 8-13 0-4-2-7-5-8 1-3-1-5-3-5-2 0-3 1-3 3-2 0-3-1-4-2Z" fill="url(#mzGrad)"/>
+                <path d="M21 12c0-2 2-4 4-4" stroke="#34C759" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+              </svg>
+              Calofit AI
+            </div>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7A8390" stroke-width="2"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
+          </div>
+          <div class="glass glow-naranja kcal-card">
+            <p class="num">400</p>
+            <p class="lbl">KCAL RESTANTES HOY</p>
+          </div>
+          <div class="anillo-mini-row">
+            <div class="glass anillo-mini"><div class="ring3d" style="background:conic-gradient(var(--proteina) 62%, #EEF0F3 0); box-shadow:0 0 12px -1px rgb(52 199 89/.55);"></div><b>78g</b><span>PROTEÍNA</span></div>
+            <div class="glass anillo-mini"><div class="ring3d" style="background:conic-gradient(var(--carbos) 44%, #EEF0F3 0); box-shadow:0 0 12px -1px rgb(255 122 31/.5);"></div><b>140g</b><span>CARBOS</span></div>
+            <div class="glass anillo-mini"><div class="ring3d" style="background:conic-gradient(var(--grasas) 70%, #EEF0F3 0); box-shadow:0 0 12px -1px rgb(79 168 224/.5);"></div><b>52g</b><span>GRASAS</span></div>
+          </div>
+          <p class="recientes-tit">COMIDAS RECIENTES</p>
+          <div class="glass comida-reciente">
+            <div class="comida-foto" style="background:linear-gradient(150deg,#E8A25C,#C4611E), radial-gradient(circle at 30% 25%, #FFCB8A, transparent 55%);"></div>
+            <div class="comida-info"><b>Salmón con espárragos</b><span>1:24 pm</span></div>
+            <span class="comida-kcal">410</span>
+          </div>
+          <div class="glass comida-reciente" style="margin-top:8px;">
+            <div class="comida-foto" style="background:linear-gradient(150deg,#8FB65C,#4E7A2E), radial-gradient(circle at 30% 25%, #C6E38C, transparent 55%);"></div>
+            <div class="comida-info"><b>Bowl de quinoa</b><span>8:10 am</span></div>
+            <span class="comida-kcal">320</span>
+          </div>
+        </div>
+        <div class="home-indicator"></div>
+      </div>
+    </div>
+
+    <!-- 2. CAMERA SCAN -->
+    <div class="tarjeta">
+      <h2>Escaneo con cámara —<br>etiquetas al instante</h2>
+      <div class="telefono">
+        <div class="foto-bg" style="background:linear-gradient(160deg,#F4F7F0 0%,#E4EEDA 45%,#D3E6C4 100%), radial-gradient(circle at 60% 35%, #C43A2A 0%, transparent 26%), radial-gradient(circle at 35% 55%, #E8C23C 0%, transparent 24%), radial-gradient(circle at 55% 65%, #6FA83E 0%, transparent 26%);"></div>
+        <div class="statusbar"><span>9:41</span><span class="der">
+          <svg width="16" height="10" viewBox="0 0 17 11" fill="currentColor"><rect x="0" y="7" width="3" height="4" rx="0.8"/><rect x="4.5" y="5" width="3" height="6" rx="0.8"/><rect x="9" y="3" width="3" height="8" rx="0.8"/><rect x="13.5" y="0.5" width="3" height="10.5" rx="0.8"/></svg>
+          <svg width="23" height="11" viewBox="0 0 25 12"><rect x="0.5" y="0.5" width="21" height="11" rx="3" fill="none" stroke="currentColor" opacity="0.4"/><rect x="2" y="2" width="15" height="8" rx="1.6" fill="currentColor"/></svg>
+        </span></div>
+        <div class="visor-corner tl"></div><div class="visor-corner tr"></div>
+        <div class="visor-corner bl"></div><div class="visor-corner br"></div>
+        <div class="glass etiqueta-flot" style="top:90px; left:16px;">Lechuga <span>8 kcal</span></div>
+        <div class="glass etiqueta-flot" style="top:150px; right:14px;">Tomates cherry <span>18 kcal</span></div>
+        <div class="glass etiqueta-flot" style="top:210px; left:24px;">Parmesano <span>42 kcal</span></div>
+        <div class="shutter-wrap"><div class="shutter"></div></div>
+      </div>
+    </div>
+
+    <!-- 3. ANÁLISIS DETALLADO -->
+    <div class="tarjeta">
+      <h2>Análisis detallado —<br>cada ingrediente, claro</h2>
+      <div class="telefono">
+        <div class="foto-bg" style="background:linear-gradient(160deg,#F6F0E6 0%,#EFDCC0 50%,#E6C89A 100%), radial-gradient(circle at 60% 25%, #D48A3E 0%, transparent 40%), radial-gradient(circle at 30% 40%, #6FA83E 0%, transparent 32%);"></div>
+        <div class="statusbar"><span>9:41</span><span class="der">
+          <svg width="16" height="10" viewBox="0 0 17 11" fill="currentColor"><rect x="0" y="7" width="3" height="4" rx="0.8"/><rect x="4.5" y="5" width="3" height="6" rx="0.8"/><rect x="9" y="3" width="3" height="8" rx="0.8"/><rect x="13.5" y="0.5" width="3" height="10.5" rx="0.8"/></svg>
+          <svg width="23" height="11" viewBox="0 0 25 12"><rect x="0.5" y="0.5" width="21" height="11" rx="3" fill="none" stroke="currentColor" opacity="0.4"/><rect x="2" y="2" width="15" height="8" rx="1.6" fill="currentColor"/></svg>
+        </span></div>
+        <div class="glass analisis-panel">
+          <p class="tit">Bandeja de salmón</p>
+          <p class="sub">476 kcal · 1 porción</p>
+          <div class="mb-row"><span class="lbl">Carbos</span><div class="mb-track"><div class="mb-fill" style="width:37%;background:var(--carbos)"></div></div><span class="pct">37%</span></div>
+          <div class="mb-row"><span class="lbl">Proteína</span><div class="mb-track"><div class="mb-fill" style="width:41%;background:var(--proteina)"></div></div><span class="pct">41%</span></div>
+          <div class="mb-row"><span class="lbl">Grasas</span><div class="mb-track"><div class="mb-fill" style="width:22%;background:var(--grasas)"></div></div><span class="pct">22%</span></div>
+          <ul class="ingr-scroll">
+            <li>150g salmón a la plancha <b>310 kcal</b></li>
+            <li>1 taza de espárragos <b>28 kcal</b></li>
+            <li>½ taza arroz integral <b>110 kcal</b></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3b. RECETARIO -->
+    <div class="tarjeta">
+      <h2>Recetario —<br>comida casera real</h2>
+      <div class="telefono">
+        <div class="statusbar"><span>9:41</span><span class="der">
+          <svg width="16" height="10" viewBox="0 0 17 11" fill="currentColor"><rect x="0" y="7" width="3" height="4" rx="0.8"/><rect x="4.5" y="5" width="3" height="6" rx="0.8"/><rect x="9" y="3" width="3" height="8" rx="0.8"/><rect x="13.5" y="0.5" width="3" height="10.5" rx="0.8"/></svg>
+          <svg width="23" height="11" viewBox="0 0 25 12"><rect x="0.5" y="0.5" width="21" height="11" rx="3" fill="none" stroke="currentColor" opacity="0.4"/><rect x="2" y="2" width="15" height="8" rx="1.6" fill="currentColor"/></svg>
+        </span></div>
+        <div class="pantalla">
+          <p class="ob-tit" style="font-size:15px;padding-top:14px;">Recetario</p>
+          <div class="glass buscador-glass"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#7A8390" stroke-width="2.4"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg><span>Buscar recetas caseras…</span></div>
+          <div class="categorias">
+            <span class="cat-pill on">Comida casera</span><span class="cat-pill">Meal prep</span><span class="cat-pill">Keto</span>
+          </div>
+          <div class="grid-recetas">
+            <div class="receta-glass" style="background:linear-gradient(160deg,#8FB65C,#4E7A2E), radial-gradient(circle at 70% 20%, #C6E38C, transparent 60%);"><span class="kcal-badge glass">Bowl de quinoa · 420 kcal</span></div>
+            <div class="receta-glass" style="background:linear-gradient(160deg,#E8A25C,#C4611E), radial-gradient(circle at 30% 20%, #FFCB8A, transparent 60%);"><span class="kcal-badge glass">Salmón asado · 480 kcal</span></div>
+            <div class="receta-glass" style="background:linear-gradient(160deg,#D4A868,#8B5A2B), radial-gradient(circle at 60% 25%, #F0D6A8, transparent 60%);"><span class="kcal-badge glass">Avena c/ plátano · 310 kcal</span></div>
+            <div class="receta-glass" style="background:linear-gradient(160deg,#E88F63,#A6472E), radial-gradient(circle at 35% 20%, #FFC1A3, transparent 60%);"><span class="kcal-badge glass">Tacos de pollo · 390 kcal</span></div>
+          </div>
+        </div>
+        <div class="home-indicator"></div>
+      </div>
+    </div>
+
+    <!-- 4. PROGRESO Y RACHA -->
+    <div class="tarjeta">
+      <h2>Progreso y racha —<br>tu constancia, premiada</h2>
+      <div class="telefono">
+        <div class="statusbar"><span>9:41</span><span class="der">
+          <svg width="16" height="10" viewBox="0 0 17 11" fill="currentColor"><rect x="0" y="7" width="3" height="4" rx="0.8"/><rect x="4.5" y="5" width="3" height="6" rx="0.8"/><rect x="9" y="3" width="3" height="8" rx="0.8"/><rect x="13.5" y="0.5" width="3" height="10.5" rx="0.8"/></svg>
+          <svg width="23" height="11" viewBox="0 0 25 12"><rect x="0.5" y="0.5" width="21" height="11" rx="3" fill="none" stroke="currentColor" opacity="0.4"/><rect x="2" y="2" width="15" height="8" rx="1.6" fill="currentColor"/></svg>
+        </span></div>
+        <div class="pantalla">
+          <div class="glass glow-verde graf-card">
+            <p class="tit">TU PESO — ÚLTIMOS 30 DÍAS</p>
+            <p class="peso">68.4 kg <span style="color:var(--verde);font-size:12px;font-weight:800;">↓ 1.8kg</span></p>
+            <svg class="linea-svg" width="100%" height="70" viewBox="0 0 260 70">
+              <defs><linearGradient id="lineaFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#34C759" stop-opacity="0.28"/><stop offset="100%" stop-color="#34C759" stop-opacity="0"/></linearGradient></defs>
+              <path d="M0 46 Q30 50 50 40 T110 34 T170 44 T230 20 T260 16 V70 H0 Z" fill="url(#lineaFill)"/>
+              <path d="M0 46 Q30 50 50 40 T110 34 T170 44 T230 20 T260 16" fill="none" stroke="#34C759" stroke-width="2.6" stroke-linecap="round"/>
+              <circle cx="230" cy="20" r="6" fill="#fff" stroke="#34C759" stroke-width="3"/>
+              <circle cx="230" cy="20" r="10" fill="none" stroke="#34C759" stroke-width="1.4" opacity="0.4"/>
+            </svg>
+          </div>
+          <div class="glass glow-naranja badge-card">
+            <p class="titulo">NUEVO LOGRO DESBLOQUEADO</p>
+            <div class="trofeo-wrap">
+              <svg width="118" height="118" viewBox="0 0 130 130">
+                <defs>
+                  <radialGradient id="brBody" cx="35%" cy="25%" r="80%"><stop offset="0%" stop-color="#8FCB6B"/><stop offset="60%" stop-color="#4C8A38"/><stop offset="100%" stop-color="#2E5D22"/></radialGradient>
+                </defs>
+                <ellipse cx="65" cy="118" rx="30" ry="6" fill="#000" opacity="0.12"/>
+                <rect x="56" y="86" width="18" height="24" rx="8" fill="#B98C52"/>
+                <circle cx="44" cy="58" r="24" fill="url(#brBody)"/><circle cx="86" cy="58" r="24" fill="url(#brBody)"/><circle cx="65" cy="38" r="27" fill="url(#brBody)"/>
+                <ellipse cx="52" cy="26" rx="12" ry="8" fill="#ffffff" opacity="0.35"/>
+                <g transform="translate(88,78)">
+                  <circle cx="14" cy="14" r="16" fill="#FF9B49" stroke="#fff" stroke-width="2.5"/>
+                  <path d="M8 10h12v5a6 6 0 0 1-12 0Z" fill="#fff"/>
+                  <rect x="12" y="19" width="4" height="4" fill="#fff"/>
+                  <rect x="9" y="23" width="10" height="2.4" rx="1.2" fill="#fff"/>
+                </g>
+              </svg>
+            </div>
+            <p class="logro">Racha de 15 días 🔥</p>
+            <p class="sub">Tu mejor marca hasta ahora</p>
+          </div>
+        </div>
+        <div class="home-indicator"></div>
+      </div>
+    </div>
+
+    <!-- 6. ONBOARDING — AGUACATE 3D -->
+    <div class="tarjeta">
+      <h2>La IA arma tu plan,<br>tú solo disfruta</h2>
+      <div class="telefono">
+        <div class="pantalla">
+          <p class="ob-tit">La IA está armando<br>tu plan perfecto…</p>
+          <div class="glass ob-check">
+            <div class="ob-item done"><span class="ob-mark"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.6" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg></span>Ajustando tu meta de calorías</div>
+            <div class="ob-item now"><span class="ob-mark"></span>Calculando tus macros ideales</div>
+            <div class="ob-item pend"><span class="ob-mark"></span>Preparando tu primera semana</div>
+          </div>
+          <div class="avocado-wrap2">
+            <svg width="150" height="150" viewBox="0 0 160 160">
+              <defs>
+                <radialGradient id="avoBody2" cx="35%" cy="25%" r="80%"><stop offset="0%" stop-color="#8FCB6B"/><stop offset="60%" stop-color="#4C8A38"/><stop offset="100%" stop-color="#2E5D22"/></radialGradient>
+                <radialGradient id="avoFlesh2" cx="35%" cy="30%" r="75%"><stop offset="0%" stop-color="#EFF6C8"/><stop offset="100%" stop-color="#B7DE6A"/></radialGradient>
+                <radialGradient id="avoPit2" cx="35%" cy="30%" r="75%"><stop offset="0%" stop-color="#C08A4E"/><stop offset="100%" stop-color="#7A4E22"/></radialGradient>
+              </defs>
+              <ellipse cx="80" cy="150" rx="34" ry="7" fill="#000" opacity="0.10"/>
+              <ellipse cx="80" cy="86" rx="52" ry="62" fill="url(#avoBody2)"/>
+              <ellipse cx="80" cy="90" rx="36" ry="46" fill="url(#avoFlesh2)"/>
+              <circle cx="80" cy="98" r="19" fill="url(#avoPit2)"/>
+              <ellipse cx="60" cy="46" rx="16" ry="10" fill="#ffffff" opacity="0.4"/>
+              <path d="M32 96 Q14 92 12 74" stroke="#4C8A38" stroke-width="9" fill="none" stroke-linecap="round"/>
+              <path d="M128 96 Q146 92 148 74" stroke="#4C8A38" stroke-width="9" fill="none" stroke-linecap="round"/>
+              <rect x="130" y="58" width="26" height="34" rx="6" fill="#fff" stroke="#FF9B49" stroke-width="2"/>
+              <rect x="134" y="63" width="18" height="3" rx="1.5" fill="#FF9B49"/>
+              <rect x="134" y="69" width="12" height="3" rx="1.5" fill="#B8A697"/>
+              <circle cx="68" cy="80" r="3.2" fill="#20351C"/><circle cx="92" cy="80" r="3.2" fill="#20351C"/>
+              <path d="M70 90 Q80 95 90 90" stroke="#20351C" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+              <circle cx="60" cy="86" r="4" fill="#FF9B85" opacity="0.5"/><circle cx="100" cy="86" r="4" fill="#FF9B85" opacity="0.5"/>
+            </svg>
+          </div>
+        </div>
+        <div class="home-indicator"></div>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>
