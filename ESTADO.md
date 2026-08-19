@@ -38,5 +38,28 @@ Diferenciadores declarados por el usuario:
 - Fuente de la idea: documento propio del usuario (PDF con investigación de mercado, avatar y propuesta de valor) — no se repite la investigación de avatar, sí se hizo validación de mercado con fuentes reales (stores, Indie Hackers).
 - Ángulo de venta ajustado: transparencia de precio + comida casera real, no solo "reconoce comida latina" (por la competencia de Nutrola/NutriScan).
 
+## Constitución del Producto (B3 — aprobada por el usuario)
+- **Primera victoria (combinación 1+5):** la foto que reconoce SU comida real y entrega calorías/macros en segundos, seguida de "Día 1 de tu racha 🔥" para engancharla desde el primer uso.
+- **3 funciones del MVP:**
+  1. Registro por foto con IA (foto → calorías/macros en segundos, reconocimiento de comida casera/LATAM)
+  2. Ajuste conversacional (corregir la IA hablándole natural, sin formularios)
+  3. Racha + resumen diario/semanal (gamificación de retención + progreso hacia meta de kcal)
+  Fuera del MVP (v2): planes de comida generados, comunidad social, integración báscula/wearables, recetas.
+- **Nunca debe hacer:**
+  1. Inventar calorías cuando no está segura — debe decirlo y pedir ajuste, no alucinar un número.
+  2. Cobrar sin avisar el precio antes / trials que se convierten sin avisar.
+  3. Usar culpa como motivador (nada de "fallaste hoy"; tono nutricionista empático).
+  4. Compartir datos del usuario (fotos, peso, hábitos) con terceros sin permiso explícito.
+- **Promesa central:** "No peses tu comida. Solo tómale una foto — y paga lo que dice el precio, sin sorpresas."
+
+## Decisiones técnicas (decididas por el agente, no requieren aprobación del usuario — ver CLAUDE.md → PREGUNTAR vs DECIDIR)
+- **Nicho de monetización (02C, tabla C — Fitness/Nutrición/Tracking):** primera victoria = primer análisis; paywall tras el primer análisis; monetización trial + anual, créditos si el costo de IA por acción lo justifica; retención por check-ins/racha.
+- **Modelo de negocio:** Modelo 2 — Onboarding + Paywall de prueba, variante **preview anónimo → paywall → login/auth** (la primera foto se puede probar sin cuenta, se guarda temporal en el navegador; el login se pide para conservar el progreso y tras pagar).
+- **Trial:** 5-7 días (el "aha" es inmediato — foto a resultado en segundos). Definir el número exacto y precio real en FICHA-MERCADO (investigación de precios LATOM pendiente antes de fijar el paywall final).
+- **Framework:** Next.js (App Router) — la app necesita landing pública con SEO/marketing además de la app interna tras login.
+- **Auth:** Supabase Auth, passwordless (magic link) + Google OAuth — mínima fricción, sin passwords que recordar.
+- **Arquitectura de IA:** llamada síncrona a un modelo de visión (foto → JSON de calorías/macros) vía endpoint propio del servidor (BFF) — nunca la clave del proveedor de IA en el frontend. Latencia objetivo <5s con skeleton de carga. Créditos por plan (no tokens) para controlar costo por usuario intensivo — cifras exactas se validan contra el margen en la Sesión 6.
+- **Modelo de datos (borrador, se refina en 25):** `profiles` (meta kcal/macros, plan), `food_logs` (foto, calorías, macros, timestamp, editado_por_usuario), `user_progress` (racha, último check-in), `user_quota` (créditos de IA del período). RLS por `auth.uid()` en todas las tablas.
+
 ## Pendiente / siguiente paso
-Completar la Constitución del Producto (B3): primera victoria en los primeros minutos, 3 funciones del MVP, qué NUNCA debe hacer la app. Luego: monetización (02C), avatar de consciencia (57), arquitectura (04), base de datos (25), auth (26).
+B4 — Referencias visuales: preguntarle al usuario si usamos las apps del reporte (Cal AI, MyFitnessPal, Nutrola/NutriScan) como inspiración visual o si tiene otras/capturas propias. Luego: Sesión 2 (identidad visual y sistema de diseño).
