@@ -62,4 +62,7 @@ Diferenciadores declarados por el usuario:
 - **Modelo de datos (borrador, se refina en 25):** `profiles` (meta kcal/macros, plan), `food_logs` (foto, calorías, macros, timestamp, editado_por_usuario), `user_progress` (racha, último check-in), `user_quota` (créditos de IA del período). RLS por `auth.uid()` en todas las tablas.
 
 ## Pendiente / siguiente paso
-B4 — Referencias visuales: preguntarle al usuario si usamos las apps del reporte (Cal AI, MyFitnessPal, Nutrola/NutriScan) como inspiración visual o si tiene otras/capturas propias. Luego: Sesión 2 (identidad visual y sistema de diseño).
+Sesión 2 (identidad visual): el usuario ya aprobó paleta y modo (FICHA-ARTE.md, referencia-mandato de Cal AI, oscuro/cálido/naranja) y se le preguntó si arrancamos a montar el proyecto de código + las 3 variantes A/B/C. Esperando su confirmación ("¿Seguimos con eso?") antes de escribir código o generar `direcciones-abc.html`.
+
+## Problemas conocidos
+- PENDIENTE-ABC: `direcciones-abc.html` (comparativa de 3 interpretaciones A/B/C exigida por el protocolo del 54) todavía NO existe. Motivo: la paleta/modo se cerraron por referencia-mandato del usuario (Cal AI), pero las 3 variantes de COMPOSICIÓN aún no se construyeron — eso requiere escribir código del proyecto (Next.js), que es un paso grande y todavía no tiene el OK del usuario para arrancar. En cuanto confirme, se genera `direcciones-abc.html` + `docs/revisiones/direcciones-abc.png` antes de cerrar la Sesión 2.
