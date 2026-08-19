@@ -282,10 +282,10 @@
 <header class="cabecera">
   <h1>Dirección de arte — 3 opciones para Calofit AI</h1>
   <p class="sub">
-    Versión ajustada con tu feedback: fondo blanco/crema, naranja como acento protagonista, mascotas
-    de verdura con cara (aguacate, tomate, brócoli) en vez de manchas de color, y el momento de
-    ESCANEO visible (visor de cámara + "Analizando tu plato…") antes del resultado. Las 3 opciones
-    comparten esta misma paleta y tipografía; cambia cómo se organiza la pantalla.
+    Versión ajustada con tu feedback: fondo blanco/crema, naranja como acento protagonista, la comida
+    como render 3D realista con brillo (aguacate, tomate, brócoli — sin caritas, como una foto de
+    estudio), y el momento de ESCANEO visible (visor de cámara + "Analizando tu plato…") antes del
+    resultado. Las 3 opciones comparten esta misma paleta y tipografía; cambia cómo se organiza la pantalla.
   </p>
   <div class="salidas" role="list">
     <span role="listitem"><b>1 · Elegir</b> A, B o C</span>
@@ -336,37 +336,37 @@
             <svg width="13" height="13" viewBox="0 0 24 24" fill="#FF7A1F"><path d="M12 2c2 4-1 5-1 8a4 4 0 0 0 8 0c0-1-.3-2-.8-2.8C19.5 9 21 12 21 14a9 9 0 1 1-18 0c0-5 4-7 5-9 .5 2 1 3 2 3 1.3 0 2-1.5 2-6Z"/></svg>
             15
           </span>
-          <!-- Aguacate -->
-          <div class="mascota anim-1" style="width:96px;height:96px;right:-6px;top:30px;">
+          <!-- Aguacate — render 3D glossy, sin cara -->
+          <div class="mascota" style="width:96px;height:96px;right:-6px;top:30px;">
             <svg viewBox="0 0 100 100">
-              <ellipse cx="50" cy="52" rx="34" ry="42" fill="#3E7D33"/>
-              <ellipse cx="50" cy="54" rx="24" ry="32" fill="#B7DE6A"/>
-              <circle cx="50" cy="60" r="13" fill="#8B5A2B"/>
-              <ellipse cx="40" cy="30" rx="10" ry="7" fill="#ffffff" opacity="0.28"/>
-              <circle cx="40" cy="46" r="3.4" fill="#20351C"/><circle cx="60" cy="46" r="3.4" fill="#20351C"/>
-              <circle cx="34" cy="50" r="2.6" fill="#FF9B85" opacity="0.6"/><circle cx="66" cy="50" r="2.6" fill="#FF9B85" opacity="0.6"/>
-              <path d="M42 56 Q50 61 58 56" stroke="#20351C" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+              <defs>
+                <radialGradient id="skin-a1" cx="35%" cy="25%" r="75%"><stop offset="0%" stop-color="#5FA84C"/><stop offset="100%" stop-color="#2B5A22"/></radialGradient>
+                <radialGradient id="flesh-a1" cx="35%" cy="25%" r="75%"><stop offset="0%" stop-color="#D9EFA0"/><stop offset="100%" stop-color="#94C24A"/></radialGradient>
+                <radialGradient id="pit-a1" cx="35%" cy="30%" r="75%"><stop offset="0%" stop-color="#A9713C"/><stop offset="100%" stop-color="#6B431F"/></radialGradient>
+              </defs>
+              <ellipse cx="50" cy="52" rx="34" ry="42" fill="url(#skin-a1)"/>
+              <ellipse cx="50" cy="54" rx="24" ry="32" fill="url(#flesh-a1)"/>
+              <circle cx="50" cy="60" r="13" fill="url(#pit-a1)"/>
+              <ellipse cx="38" cy="26" rx="12" ry="8" fill="#ffffff" opacity="0.35"/>
             </svg>
           </div>
-          <!-- Tomate -->
-          <div class="mascota anim-2" style="width:64px;height:64px;left:14px;top:52px;">
+          <!-- Tomate — render 3D glossy, sin cara -->
+          <div class="mascota" style="width:64px;height:64px;left:14px;top:52px;">
             <svg viewBox="0 0 100 100">
-              <circle cx="50" cy="58" r="34" fill="#FF5A44"/>
+              <defs><radialGradient id="tom-a1" cx="35%" cy="25%" r="75%"><stop offset="0%" stop-color="#FF7A63"/><stop offset="100%" stop-color="#C4321E"/></radialGradient></defs>
+              <circle cx="50" cy="58" r="34" fill="url(#tom-a1)"/>
               <path d="M40 20 Q50 8 60 20" stroke="#4E8F27" stroke-width="6" fill="none" stroke-linecap="round"/>
               <path d="M50 16 L55 26 L65 22 L59 32 Z" fill="#4E8F27"/>
-              <ellipse cx="38" cy="44" rx="10" ry="7" fill="#ffffff" opacity="0.3"/>
-              <circle cx="40" cy="58" r="3.6" fill="#5C1810"/><circle cx="60" cy="58" r="3.6" fill="#5C1810"/>
-              <path d="M42 68 Q50 73 58 68" stroke="#5C1810" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+              <ellipse cx="36" cy="40" rx="12" ry="8" fill="#ffffff" opacity="0.35"/>
             </svg>
           </div>
-          <!-- Brócoli -->
-          <div class="mascota anim-3" style="width:52px;height:52px;left:96px;bottom:0px;">
+          <!-- Brócoli — render 3D glossy, sin cara -->
+          <div class="mascota" style="width:52px;height:52px;left:96px;bottom:0px;">
             <svg viewBox="0 0 100 100">
-              <rect x="42" y="72" width="16" height="22" rx="7" fill="#C79A5B"/>
-              <circle cx="34" cy="46" r="20" fill="#57BF46"/><circle cx="66" cy="46" r="20" fill="#57BF46"/><circle cx="50" cy="30" r="22" fill="#57BF46"/>
-              <ellipse cx="42" cy="20" rx="10" ry="7" fill="#ffffff" opacity="0.28"/>
-              <circle cx="42" cy="40" r="3.2" fill="#20351C"/><circle cx="58" cy="40" r="3.2" fill="#20351C"/>
-              <path d="M44 48 Q50 52 56 48" stroke="#20351C" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+              <defs><radialGradient id="broc-a1" cx="35%" cy="25%" r="80%"><stop offset="0%" stop-color="#79CC5C"/><stop offset="100%" stop-color="#2E7D2A"/></radialGradient></defs>
+              <rect x="42" y="72" width="16" height="22" rx="7" fill="#B98C52"/>
+              <circle cx="34" cy="46" r="20" fill="url(#broc-a1)"/><circle cx="66" cy="46" r="20" fill="url(#broc-a1)"/><circle cx="50" cy="30" r="22" fill="url(#broc-a1)"/>
+              <ellipse cx="40" cy="20" rx="10" ry="7" fill="#ffffff" opacity="0.3"/>
             </svg>
           </div>
         </div>
@@ -397,15 +397,17 @@
       <h4>No peses tu comida. Solo tómale una foto.</h4>
       <p>Baja de peso comiendo rico, sin básculas y sin sorpresas en el precio.</p>
       <span class="cta-mini">Empieza gratis</span>
-      <div class="mascota anim-1" style="width:118px;height:118px;right:-14px;bottom:-14px;">
+      <div class="mascota" style="width:118px;height:118px;right:-14px;bottom:-14px;">
         <svg viewBox="0 0 100 100">
-          <ellipse cx="50" cy="52" rx="34" ry="42" fill="#3E7D33"/>
-          <ellipse cx="50" cy="54" rx="24" ry="32" fill="#B7DE6A"/>
-          <circle cx="50" cy="60" r="13" fill="#8B5A2B"/>
-          <ellipse cx="40" cy="30" rx="10" ry="7" fill="#ffffff" opacity="0.28"/>
-          <circle cx="40" cy="46" r="3.4" fill="#20351C"/><circle cx="60" cy="46" r="3.4" fill="#20351C"/>
-          <circle cx="34" cy="50" r="2.6" fill="#FF9B85" opacity="0.6"/><circle cx="66" cy="50" r="2.6" fill="#FF9B85" opacity="0.6"/>
-          <path d="M42 56 Q50 61 58 56" stroke="#20351C" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+          <defs>
+            <radialGradient id="skin-h1" cx="35%" cy="25%" r="75%"><stop offset="0%" stop-color="#5FA84C"/><stop offset="100%" stop-color="#2B5A22"/></radialGradient>
+            <radialGradient id="flesh-h1" cx="35%" cy="25%" r="75%"><stop offset="0%" stop-color="#D9EFA0"/><stop offset="100%" stop-color="#94C24A"/></radialGradient>
+            <radialGradient id="pit-h1" cx="35%" cy="30%" r="75%"><stop offset="0%" stop-color="#A9713C"/><stop offset="100%" stop-color="#6B431F"/></radialGradient>
+          </defs>
+          <ellipse cx="50" cy="52" rx="34" ry="42" fill="url(#skin-h1)"/>
+          <ellipse cx="50" cy="54" rx="24" ry="32" fill="url(#flesh-h1)"/>
+          <circle cx="50" cy="60" r="13" fill="url(#pit-h1)"/>
+          <ellipse cx="38" cy="26" rx="12" ry="8" fill="#ffffff" opacity="0.35"/>
         </svg>
       </div>
     </div>
@@ -539,14 +541,13 @@
       <h4>Todo lo que comiste hoy, en un solo lugar.</h4>
       <p>Sin culpa, sin básculas — solo tu historial real.</p>
       <span class="cta-mini">Empieza gratis</span>
-      <div class="mascota anim-2" style="width:110px;height:110px;right:-10px;bottom:-10px;">
+      <div class="mascota" style="width:110px;height:110px;right:-10px;bottom:-10px;">
         <svg viewBox="0 0 100 100">
-          <circle cx="50" cy="58" r="34" fill="#FF5A44"/>
+          <defs><radialGradient id="tom-h1" cx="35%" cy="25%" r="75%"><stop offset="0%" stop-color="#FF7A63"/><stop offset="100%" stop-color="#C4321E"/></radialGradient></defs>
+          <circle cx="50" cy="58" r="34" fill="url(#tom-h1)"/>
           <path d="M40 20 Q50 8 60 20" stroke="#4E8F27" stroke-width="6" fill="none" stroke-linecap="round"/>
           <path d="M50 16 L55 26 L65 22 L59 32 Z" fill="#4E8F27"/>
-          <ellipse cx="38" cy="44" rx="10" ry="7" fill="#ffffff" opacity="0.3"/>
-          <circle cx="40" cy="58" r="3.6" fill="#5C1810"/><circle cx="60" cy="58" r="3.6" fill="#5C1810"/>
-          <path d="M42 68 Q50 73 58 68" stroke="#5C1810" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+          <ellipse cx="36" cy="40" rx="12" ry="8" fill="#ffffff" opacity="0.35"/>
         </svg>
       </div>
     </div>
