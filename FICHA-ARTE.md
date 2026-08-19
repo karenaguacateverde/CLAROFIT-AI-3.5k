@@ -36,4 +36,21 @@
 - Paleta derivada de: referencia del usuario (capturas de Cal AI, carrusel de marketing oscuro) — tomada tal cual, es un contrato de fidelidad
 - Modo (oscuro) DERIVADO por: mandato explícito del usuario, no asumido por defecto
 
-## Idioma UI: español latino neutro · Fecha de cierre: BORRADOR — paleta y modo aprobados 2026-08-19, tipografía y A/B/C pendientes de la Sesión 2 · Aprobada por el usuario: paleta/modo SÍ, resto PENDIENTE
+## Actualización de referencia (2026-08-19, segunda vuelta) — CONTRATO VIGENTE
+El usuario compartió el carrusel real de App Store de Cal AI (6 pantallas) + 6 prompts propios de
+ingeniería inversa. Esto REEMPLAZA la interpretación clara/plana intentada a mitad de sesión y
+confirma modo oscuro como definitivo (no se vuelve a redecidir):
+- Modo: OSCURO cálido, confirmado por segunda vez con referencia explícita — ya no se toca.
+- Superficies: tarjetas "glass" (vidrio esmerilado) flotando sobre fotos reales de comida —
+  fondo semitransparente + blur, no bloques de color sólido.
+- Comida: FOTOGRAFÍA real (o simulación foto-realista de alto detalle), no íconos planos ni
+  renders vectoriales simples — es el detalle que distingue "app seria" de "mockup genérico".
+- Mascota 3D (SOLO onboarding, no en el dashboard/comida diaria): aguacate tierno estilo
+  Pixar/3D suave, reemplaza al robot del original de Cal AI — brazos pequeños, textura glossy,
+  luz cálida de acento. Aparece en la pantalla "la IA está armando tu plan", nunca sobre los
+  íconos de alimentos (ese uso ya fue rechazado por el usuario por verse infantil).
+- 6 pantallas ancla identificadas: dashboard/resumen diario, estadísticas (racha + tendencia +
+  dona semanal), recetario (buscador + grid con fotos), escaneo (cámara + detección en vivo),
+  desglose de plato (foto + panel glass de macros/ingredientes), onboarding con el aguacate.
+
+## Idioma UI: español latino neutro · Fecha de cierre: BORRADOR — modo oscuro + glass + mascota 3D reconfirmados 2026-08-19 con referencia explícita del usuario · Aprobada por el usuario: SÍ (contrato fiel)
