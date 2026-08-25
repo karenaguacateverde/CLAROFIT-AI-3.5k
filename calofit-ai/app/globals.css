@@ -1,0 +1,77 @@
+@import "tailwindcss";
+@import "../components/landing/tokens.css";
+
+/* Calofit AI: dirección de arte CERRADA en claro (FICHA-ARTE.md, tercera vuelta) —
+   sin auto-switch a oscuro por prefers-color-scheme, ya no se alterna. */
+
+/* Fondo general ultra sutil (2026-08-22, pedido explícito): degradado casi
+   imperceptible blanco → menta clarísimo → crema, con los MISMOS tokens de marca
+   (--accent-2 verde, --accent naranja) a opacidad muy baja — nunca un color nuevo. */
+body {
+  background:
+    radial-gradient(1200px 800px at 15% 0%, color-mix(in oklab, var(--accent-2) 5%, transparent) 0%, transparent 55%),
+    radial-gradient(1000px 700px at 100% 30%, color-mix(in oklab, var(--accent) 4%, transparent) 0%, transparent 55%),
+    var(--bg);
+  background-attachment: fixed;
+}
+
+/* Glow del bloque "Después" (2026-08-22, pedido explícito): resplandor verde
+   que respira suavemente — vivo, sin ser una animación agresiva/bloqueante. */
+@keyframes glow-despues {
+  0%, 100% {
+    box-shadow: 0 0 0 1px color-mix(in oklab, var(--accent-2) 55%, transparent),
+      0 0 16px 2px color-mix(in oklab, var(--accent-2) 25%, transparent);
+  }
+  50% {
+    box-shadow: 0 0 0 1px color-mix(in oklab, var(--accent-2) 75%, transparent),
+      0 0 28px 6px color-mix(in oklab, var(--accent-2) 40%, transparent);
+  }
+}
+.glow-despues {
+  animation: glow-despues 2.4s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .glow-despues {
+    animation: none;
+    box-shadow: 0 0 0 1px color-mix(in oklab, var(--accent-2) 65%, transparent);
+  }
+}
+
+/* Texto "escarchado"/espejo (2026-08-22, pedido explícito): brillo que
+   recorre el texto una vez y pausa — llama la atención sin ser irritante. */
+@keyframes texto-espejo {
+  0% { background-position: -150% 0; }
+  50%, 100% { background-position: 250% 0; }
+}
+.text-espejo {
+  background-image: linear-gradient(
+    100deg,
+    var(--text-secondary) 40%,
+    var(--text-primary) 46%,
+    #fff 50%,
+    var(--text-primary) 54%,
+    var(--text-secondary) 60%
+  );
+  background-size: 250% 100%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  animation: texto-espejo 3.2s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .text-espejo {
+    animation: none;
+    background: none;
+    -webkit-text-fill-color: unset;
+    color: var(--text-primary);
+  }
+}
+
+/* Carrusel de testimonios: oculta la barra de scroll sin quitar el scroll táctil. */
+.scrollbar-none {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}

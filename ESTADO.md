@@ -1,7 +1,12 @@
 # ESTADO.md — Calofit AI
 
 ## Fase actual
-Sesión 1 — Validación, AVATAR, monetización y arquitectura (en curso: Constitución del Producto)
+App interna construida (2026-08-24) — decisión explícita del usuario de saltar el login/auth y
+construir la app interna primero (fuera del orden normal de la secuencia maestra; login sigue
+pendiente, ver Problemas conocidos). 4 pantallas con navegación inferior (`/app`, `/app/escanear`,
+`/app/progreso`, `/app/perfil`), probadas por código (contenido, interacciones, sin errores de
+consola) — sin verificación visual real por la misma limitación de captura de pantalla ya anotada.
+Datos de ejemplo en las 4; el backend de IA y Supabase se conectan en la fase de "servicios externos".
 
 ## Idea
 Calofit AI — app de nutrición con visión artificial: el usuario toma una foto de su plato y la IA calcula calorías y macros al instante, entrenada/contextualizada para reconocer comida casera y típica de LATAM (no solo comida industrializada o anglosajona como las apps gringas).
@@ -62,7 +67,70 @@ Diferenciadores declarados por el usuario:
 - **Modelo de datos (borrador, se refina en 25):** `profiles` (meta kcal/macros, plan), `food_logs` (foto, calorías, macros, timestamp, editado_por_usuario), `user_progress` (racha, último check-in), `user_quota` (créditos de IA del período). RLS por `auth.uid()` en todas las tablas.
 
 ## Pendiente / siguiente paso
-Sesión 2 (identidad visual): el usuario ya aprobó paleta y modo (FICHA-ARTE.md, referencia-mandato de Cal AI, oscuro/cálido/naranja) y se le preguntó si arrancamos a montar el proyecto de código + las 3 variantes A/B/C. Esperando su confirmación ("¿Seguimos con eso?") antes de escribir código o generar `direcciones-abc.html`.
+- ⚠️ Nota de dirección de arte: este archivo aún dice "oscuro/cálido/naranja" pero FICHA-ARTE.md
+  quedó DEFINITIVA en claro ("3D luminous glassmorphism", tercera vuelta) — la landing y el
+  onboarding (veredicto visual pendiente en ambos, ver Problemas conocidos) ya están construidos
+  en claro. Corregir esta línea la próxima vez que se edite este
+  archivo a fondo.
+- Landing (veredicto visual pendiente, ver Problemas conocidos) completa (Hero, Logros, App por
+  dentro, Testimonios ×2, Bonos, Oferta, Garantía,
+  Estadísticas, FAQ, Footer + Aviso Meta) — construida, a pedido explícito del usuario, con varios
+  conocidos), a pedido explícito del usuario, con varios
+  elementos de marketing FABRICADOS (testimonios, calificación 4.9, +7M usuarios, precio ancla
+  $27→$7) que el usuario confirmó querer pese a la advertencia de riesgo legal/reputacional — ver
+  el detalle completo en `FICHA-MERCADO.md` (sección de riesgos de integridad). **Ninguno de esos
+  elementos debe copiarse al onboarding ni a futuras pantallas sin la misma advertencia.**
+- Onboarding de 8 pasos construido (veredicto visual pendiente, ver Problemas conocidos) y probado
+  de punta a punta, reestructurado 2026-08-24:
+  Nombre → Objetivo (+"Otro" libre) → Dolor (+"Otros" libre) → Reconocimiento → Escaneo demo →
+  Meta diaria (+"Otro" custom) → Racha Día 1 → Paywall (la pantalla intermedia de "Urgencia y
+  valor" se QUITÓ a pedido explícito — el valor y los bonos ahora viven dentro del propio paywall,
+  para no repetir información). Gamificación: toast de recompensa con emoji de verdura/fruta
+  (🥑🥦🍓🍋🥕) + puntos de salud acumulados en memoria (no persistidos) al avanzar cada paso.
+  El paywall tiene: línea de tiempo de cobro (Hoy=acceso · Día 6=aviso · Día 7=primer cobro,
+  transparencia real de cuándo se cobra), 2 planes — "Plan Básico" ($4/mes, real, con indicador
+  "1") y "Plan Más Vendido" ($27→$7/mes, ancla de marketing, con los 6 bonos integrados como
+  checklist ✅ dentro de la propia tarjeta) —, sellos de garantía/pago y CTA verde (sin morados ni
+  rosas). El "Plan Más Vendido" promete recetas/plan de 21 días/planificador/lista de compras que
+  no existen — ver el riesgo completo en `FICHA-MERCADO.md` §8.
+  El escaneo del paso 5 es una DEMO simulada (sin backend de IA todavía) — así se declara en el
+  código y debería seguir declarándose en cualquier copy futuro.
+  El botón final del paywall apunta a `/login`, que **todavía no existe** — es el siguiente paso
+  de la secuencia maestra (login/auth → app interna → servicios externos).
+- **Compromisos de producto pendientes (aceptados por el usuario, no construir ahora):** 20 recetas
+  reales, planificador de comidas semanales, lista de compras inteligente automatizada. Prometidos
+  en el paywall del onboarding — construir antes de vender de verdad, o quitar la promesa.
+- Siguiente paso sugerido: construir `/login` (passwordless + Google OAuth, ya decidido arriba)
+  para que el paywall tenga a dónde llevar al usuario.
 
 ## Problemas conocidos
-- PENDIENTE-ABC: `direcciones-abc.html` (comparativa de 3 interpretaciones A/B/C exigida por el protocolo del 54) todavía NO existe. Motivo: la paleta/modo se cerraron por referencia-mandato del usuario (Cal AI), pero las 3 variantes de COMPOSICIÓN aún no se construyeron — eso requiere escribir código del proyecto (Next.js), que es un paso grande y todavía no tiene el OK del usuario para arrancar. En cuanto confirme, se genera `direcciones-abc.html` + `docs/revisiones/direcciones-abc.png` antes de cerrar la Sesión 2.
+- `/login` no existe — el CTA final del paywall del onboarding queda sin destino real hasta que se construya.
+  El usuario decidió explícitamente construir la app interna ANTES del login (2026-08-24) — no es
+  un olvido, es orden de trabajo elegido a propósito, fuera de la secuencia maestra estándar.
+- ✅ **Backend de IA CONECTADO (2026-08-25):** `/app/escanear` ya llama a Gemini de verdad vía
+  `app/api/escanear/route.ts` (BFF — `GEMINI_API_KEY` solo en el servidor, en `.env.local`, nunca
+  en el navegador). Probado con foto real (gallo pinto → 650 kcal, confianza alta). Modelo:
+  `gemini-3.6-flash` — elegido tras investigación de costo (~3x más barato que Claude Haiku en
+  vision) y prueba de precisión con 6 platos LATAM reales, todos reconocidos correctamente
+  (`scripts/test-ia/comparar-ia.mjs`, resultados en el historial de esta sesión).
+  El escaneo del **onboarding** (`Step5Escaneo.tsx`) sigue siendo demo simulada a propósito — no
+  necesita IA real, es solo para mostrar el mecanismo antes de que exista cuenta/paywall.
+  El **ajuste conversacional** (corregir hablando) sigue simulado — es una función aparte, no
+  conectada todavía.
+  Tampoco hay Supabase conectado: los datos de las 4 pantallas de `/app` (excepto el resultado del
+  escaneo) son de ejemplo, no persisten entre sesiones ni se comparten entre pantallas.
+- ⚠️ **VEREDICTO PENDIENTE — landing, onboarding, paywall y la pantalla principal ("Hoy",
+  `/app`)**: ninguna tiene todavía su
+  `docs/revisiones/<slug>-veredicto.md` del subagente `revisor-visual` (con screenshot real a
+  375px en `docs/revisiones/<slug>-375.png`). El paywall (paso 8 del onboarding, `Step8Paywall.tsx`)
+  es una de las 4 pantallas que deciden el dinero y necesita SU PROPIO veredicto aparte del de
+  "onboarding" — aunque viva en el mismo archivo/ruta, el gate automático de `pre-stop.sh` no lo
+  detectó por cómo está redactado este párrafo (heurística de línea), pero el requisito del sistema
+  aplica igual. Motivo de fondo: en esta sesión no hubo forma de guardar un screenshot del
+  navegador como archivo en disco — el panel de navegador embebido no expone una ruta de archivo
+  para sus capturas, y la extensión "Claude en Chrome" no está conectada en este entorno. Se
+  verificó visualmente en preview (consola sin errores, tsc limpio, recorrido completo de los 8
+  pasos del onboarding incluido el paywall), pero **eso NO reemplaza el veredicto del revisor** —
+  el sistema lo prohíbe explícitamente (autoevaluarse está prohibido). Pendiente: retomar en un
+  entorno con captura de pantalla a archivo disponible (o pedir la captura al usuario) y lanzar el
+  `revisor-visual` sobre landing, onboarding, paywall y "Hoy" antes de considerarlas certificadas.
