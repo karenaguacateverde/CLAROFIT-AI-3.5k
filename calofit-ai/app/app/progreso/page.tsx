@@ -1,51 +1,81 @@
 'use client';
 
 // APP INTERNA — §3 PROGRESO. Navegación real entre semanas (regla 13 de
-// CLAUDE.md: toda vista temporal necesita fechas reales + navegación, nunca
-// solo "esta semana"). Datos de EJEMPLO — se conectan a food_logs reales en
-// la fase de servicios externos.
+// CLAUDE.md). Conectado a food_logs real de Supabase — conectado 2026-08-26.
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { motion } from 'motion/react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { crearClienteSupabase } from '@/lib/supabase/client';
 
 const META_KCAL = 1800;
+const DIAS_SEMANA = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
 
-const SEMANAS = [
-  {
-    rango: '18-24 ago, 2026',
-    dias: [
-      { d: 'Lun', kcal: 1750 },
-      { d: 'Mar', kcal: 1820 },
-      { d: 'Mié', kcal: 1690 },
-      { d: 'Jue', kcal: 1260 },
-      { d: 'Vie', kcal: 0 },
-      { d: 'Sáb', kcal: 0 },
-      { d: 'Dom', kcal: 0 },
-    ],
-  },
-  {
-    rango: '11-17 ago, 2026',
-    dias: [
-      { d: 'Lun', kcal: 1900 },
-      { d: 'Mar', kcal: 1780 },
-      { d: 'Mié', kcal: 1650 },
-      { d: 'Jue', kcal: 1820 },
-      { d: 'Vie', kcal: 1710 },
-      { d: 'Sáb', kcal: 2050 },
-      { d: 'Dom', kcal: 1600 },
-    ],
-  },
-];
+function inicioDeSemana(offsetSemanas: number) {
+  const hoy = new Date();
+  const diaSemana = (hoy.getDay() + 6) % 7; // 0 = lunes
+  const lunes = new Date(hoy);
+  lunes.setHours(0, 0, 0, 0);
+  lunes.setDate(hoy.getDate() - diaSemana + offsetSemanas * 7);
+  return lunes;
+}
 
 export default function ProgresoPage() {
-  const [semanaIdx, setSemanaIdx] = useState(0);
-  const semana = SEMANAS[semanaIdx];
-  const diasConDatos = semana.dias.filter((d) => d.kcal > 0);
+  const [semanaOffset, setSemanaOffset] = useState(0);
+  const [dias, setDias] = useState<{ d: string; kcal: number }[]>(
+    DIAS_SEMANA.map((d) => ({ d, kcal: 0 }))
+  );
+  const [cargando, setCargando] = useState(true);
+
+  const lunes = inicioDeSemana(semanaOffset);
+  const domingo = new Date(lunes);
+  domingo.setDate(lunes.getDate() + 6);
+  const rango = `${lunes.getDate()}-${domingo.getDate()} ${domingo.toLocaleDateString('es', { month: 'short' })}, ${domingo.getFullYear()}`;
+
+  useEffect(() => {
+    let cancelado = false;
+    setCargando(true);
+
+    const finSemana = new Date(lunes);
+    finSemana.setDate(lunes.getDate() + 7);
+
+    (async () => {
+      const supabase = crearClienteSupabase();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (!user) return;
+
+      const { data } = await supabase
+        .from('food_logs')
+        .select('kcal, registrado_en')
+        .eq('user_id', user.id)
+        .gte('registrado_en', lunes.toISOString())
+        .lt('registrado_en', finSemana.toISOString());
+
+      if (cancelado) return;
+
+      const acumulado = DIAS_SEMANA.map((d) => ({ d, kcal: 0 }));
+      (data ?? []).forEach((registro) => {
+        const idx = (new Date(registro.registrado_en).getDay() + 6) % 7;
+        acumulado[idx].kcal += registro.kcal;
+      });
+      setDias(acumulado);
+      setCargando(false);
+    })();
+
+    return () => {
+      cancelado = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [semanaOffset]);
+
+  const diasConDatos = dias.filter((d) => d.kcal > 0);
   const promedio = diasConDatos.length
     ? Math.round(diasConDatos.reduce((s, d) => s + d.kcal, 0) / diasConDatos.length)
     : 0;
-  const maxKcal = Math.max(META_KCAL, ...semana.dias.map((d) => d.kcal));
+  const maxKcal = Math.max(META_KCAL, ...dias.map((d) => d.kcal));
+  const esSemanaActual = semanaOffset === 0;
 
   return (
     <div className="mx-auto max-w-md px-5 pt-6">
@@ -54,18 +84,17 @@ export default function ProgresoPage() {
       <div className="mt-4 flex items-center justify-between">
         <button
           type="button"
-          onClick={() => setSemanaIdx((i) => Math.min(i + 1, SEMANAS.length - 1))}
-          disabled={semanaIdx >= SEMANAS.length - 1}
+          onClick={() => setSemanaOffset((i) => i - 1)}
           aria-label="Semana anterior"
-          className="flex size-9 items-center justify-center rounded-full bg-[var(--surface)] shadow-[var(--shadow-1)] disabled:opacity-30 [touch-action:manipulation]"
+          className="flex size-9 items-center justify-center rounded-full bg-[var(--surface)] shadow-[var(--shadow-1)] [touch-action:manipulation]"
         >
           <ChevronLeft size={18} color="var(--text-secondary)" aria-hidden="true" />
         </button>
-        <p className="text-[16px] font-semibold text-[var(--text-primary)]">{semana.rango}</p>
+        <p className="text-[16px] font-semibold text-[var(--text-primary)]">{rango}</p>
         <button
           type="button"
-          onClick={() => setSemanaIdx((i) => Math.max(i - 1, 0))}
-          disabled={semanaIdx <= 0}
+          onClick={() => setSemanaOffset((i) => Math.min(i + 1, 0))}
+          disabled={esSemanaActual}
           aria-label="Semana siguiente"
           className="flex size-9 items-center justify-center rounded-full bg-[var(--surface)] shadow-[var(--shadow-1)] disabled:opacity-30 [touch-action:manipulation]"
         >
@@ -82,7 +111,7 @@ export default function ProgresoPage() {
         </p>
 
         <div className="mt-6 flex h-32 items-end justify-between gap-2">
-          {semana.dias.map((d, i) => {
+          {dias.map((d, i) => {
             const alturaPct = d.kcal > 0 ? Math.max(6, Math.round((d.kcal / maxKcal) * 100)) : 3;
             const sobreMeta = d.kcal > META_KCAL;
             return (
@@ -90,7 +119,7 @@ export default function ProgresoPage() {
                 <div className="flex h-24 w-full items-end">
                   <motion.div
                     initial={{ height: 0 }}
-                    animate={{ height: `${alturaPct}%` }}
+                    animate={{ height: cargando ? 0 : `${alturaPct}%` }}
                     transition={{ duration: 0.6, delay: i * 0.05, ease: [0.16, 1, 0.3, 1] }}
                     className="w-full rounded-[8px]"
                     style={{ background: sobreMeta ? 'var(--macro-proteina)' : 'var(--accent)' }}
@@ -112,10 +141,11 @@ export default function ProgresoPage() {
 
       <div className="mt-6">
         <h2 className="text-[16px] font-semibold text-[var(--text-primary)]">Historial de comidas</h2>
-        <ul className="mt-3 flex flex-col gap-2">
-          {semana.dias
-            .filter((d) => d.kcal > 0)
-            .map((d) => (
+        {diasConDatos.length === 0 ? (
+          <p className="mt-3 text-[16px] text-[var(--text-secondary)]">Sin registros esta semana.</p>
+        ) : (
+          <ul className="mt-3 flex flex-col gap-2">
+            {diasConDatos.map((d) => (
               <li
                 key={d.d}
                 className="flex items-center justify-between rounded-[var(--radius-card)] bg-[var(--surface)] p-3.5 shadow-[var(--shadow-1)]"
@@ -126,7 +156,8 @@ export default function ProgresoPage() {
                 </p>
               </li>
             ))}
-        </ul>
+          </ul>
+        )}
       </div>
     </div>
   );

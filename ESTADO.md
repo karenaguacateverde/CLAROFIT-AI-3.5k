@@ -119,8 +119,14 @@ Diferenciadores declarados por el usuario:
   necesita IA real, es solo para mostrar el mecanismo antes de que exista cuenta/paywall.
   El **ajuste conversacional** (corregir hablando) sigue simulado — es una función aparte, no
   conectada todavía.
-  Tampoco hay Supabase conectado: los datos de las 4 pantallas de `/app` (excepto el resultado del
-  escaneo) son de ejemplo, no persisten entre sesiones ni se comparten entre pantallas.
+  ✅ **Supabase CONECTADO (2026-08-26):** tablas `profiles` (con trigger que crea el perfil solo al
+  registrarse) y `food_logs`, RLS activo en ambas con políticas por `(select auth.uid())`, índice en
+  `food_logs.user_id`. `/app` (Hoy) y `/app/perfil` ahora son Server Components que leen datos reales;
+  `/app/escanear` guarda de verdad en `food_logs` al tocar "Guardar en mi día"; `/app/progreso` navega
+  semanas reales agregando `food_logs` por día. "Cerrar sesión" en Perfil ya funciona. Pendiente:
+  guardar el `nombre`/`objetivo` del onboarding en `profiles` (hoy solo vive en memoria del navegador
+  durante el onboarding, se pierde al llegar al login) — no es bloqueante, pero el nombre en "Hoy"
+  saldrá vacío hasta que se conecte.
 - ⚠️ **GitHub: repo creado, código NO subido todavía (2026-08-25).** Repo privado creado
   (`github.com/karenaguacateverde/CLAROFIT-AI-3.5k`), remote `origin` ya configurado localmente.
   El código está a salvo en un commit local (`git log` en la raíz del proyecto), pero el push falló

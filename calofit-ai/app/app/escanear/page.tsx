@@ -9,6 +9,7 @@ import { useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'motion/react';
 import { Sparkles, Send, Check, Camera, AlertCircle } from 'lucide-react';
+import { crearClienteSupabase } from '@/lib/supabase/client';
 
 type Estado = 'inicial' | 'analizando' | 'listo' | 'error';
 
@@ -78,6 +79,27 @@ export default function EscanearPage() {
     setResultado((r) => (r ? { ...r, kcal: r.kcal + 60, proteina_g: r.proteina_g + 3 } : r));
     setAjustes((a) => [...a, texto]);
     setMensaje('');
+  };
+
+  const guardarEnMiDia = async () => {
+    if (!resultado) return;
+    const supabase = crearClienteSupabase();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) return;
+
+    await supabase.from('food_logs').insert({
+      user_id: user.id,
+      plato: resultado.plato,
+      kcal: resultado.kcal,
+      carbs_g: resultado.carbs_g,
+      proteina_g: resultado.proteina_g,
+      grasa_g: resultado.grasa_g,
+      confianza: resultado.confianza,
+    });
+
+    router.push('/app');
   };
 
   return (
@@ -232,7 +254,7 @@ export default function EscanearPage() {
 
             <button
               type="button"
-              onClick={() => router.push('/app')}
+              onClick={guardarEnMiDia}
               className="mt-6 flex h-14 w-full items-center justify-center rounded-[var(--radius-button)] bg-[var(--accent)] text-[16px] font-semibold text-[var(--bg)] shadow-[0_8px_30px_color-mix(in_oklab,var(--accent)_25%,transparent)] [touch-action:manipulation]"
             >
               Guardar en mi día
