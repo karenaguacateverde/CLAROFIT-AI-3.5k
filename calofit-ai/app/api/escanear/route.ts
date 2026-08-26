@@ -4,9 +4,35 @@
 // llama a Gemini y devuelve el JSON de calorías/macros ya validado.
 
 import { NextResponse } from 'next/server';
+import { crearClienteSupabaseServidor } from '@/lib/supabase/server';
+import { crearClienteSupabaseAdmin } from '@/lib/supabase/admin';
 
 export const runtime = 'nodejs';
 export const maxDuration = 60; // objetivo <5s real; margen amplio por arranque en frío + latencia de red
+
+// Estimado por llamada (gemini-3.6-flash, imagen + prompt corto) — no es la
+// factura exacta de Google, es una referencia para el panel de costos hasta
+// que se conecte la facturación real. Afinar con el uso real de 31.
+const COSTO_ESTIMADO_USD = 0.002;
+
+async function registrarLlamadaIA(origen: string, exito: boolean) {
+  try {
+    const supabaseSesion = await crearClienteSupabaseServidor();
+    const {
+      data: { user },
+    } = await supabaseSesion.auth.getUser();
+
+    const admin = crearClienteSupabaseAdmin();
+    await admin.from('ai_calls').insert({
+      origen,
+      exito,
+      costo_estimado_usd: COSTO_ESTIMADO_USD,
+      user_id: user?.id ?? null,
+    });
+  } catch {
+    // El registro de costo nunca debe tumbar el escaneo real del usuario.
+  }
+}
 
 const PROMPT = `Eres un nutricionista analizando una foto de un plato de comida casera o típica
 latinoamericana. Identifica el/los platos, y estima calorías y macros TOTALES del plato completo.
@@ -54,6 +80,7 @@ export async function POST(req: Request) {
 
   const body = await req.json().catch(() => null);
   const imagenB64 = body?.imagenB64;
+  const origen = body?.origen === 'onboarding' ? 'onboarding' : 'app';
   if (typeof imagenB64 !== 'string' || imagenB64.length < 100) {
     return NextResponse.json({ error: 'Falta la imagen (imagenB64).' }, { status: 400 });
   }
@@ -76,6 +103,7 @@ export async function POST(req: Request) {
 
     const json = await res.json();
     if (!res.ok) {
+      await registrarLlamadaIA(origen, false);
       return NextResponse.json(
         { error: json?.error?.message ?? `Gemini respondió ${res.status}` },
         { status: 502 }
@@ -85,11 +113,14 @@ export async function POST(req: Request) {
     const texto = json?.candidates?.[0]?.content?.parts?.[0]?.text ?? '';
     const datos = extraerJson(texto);
     if (!datos) {
+      await registrarLlamadaIA(origen, false);
       return NextResponse.json({ error: 'No se pudo interpretar la respuesta de la IA.' }, { status: 502 });
     }
 
+    await registrarLlamadaIA(origen, true);
     return NextResponse.json(datos);
   } catch (e) {
+    await registrarLlamadaIA(origen, false);
     return NextResponse.json(
       { error: e instanceof Error ? e.message : 'Error de red al llamar a Gemini.' },
       { status: 502 }

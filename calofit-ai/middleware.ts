@@ -27,7 +27,8 @@ export async function middleware(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const rutaProtegida = request.nextUrl.pathname.startsWith('/app');
+  const rutaProtegida =
+    request.nextUrl.pathname.startsWith('/app') || request.nextUrl.pathname.startsWith('/admin');
 
   if (rutaProtegida && !user) {
     const url = request.nextUrl.clone();
@@ -39,5 +40,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/app/:path*'],
+  matcher: ['/app/:path*', '/admin/:path*'],
 };

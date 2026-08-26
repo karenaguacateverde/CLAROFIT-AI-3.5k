@@ -48,7 +48,7 @@ export function Step5Escaneo({ onContinuar }: { onContinuar: () => void }) {
       const res = await fetch('/api/escanear', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ imagenB64 }),
+        body: JSON.stringify({ imagenB64, origen: 'onboarding' }),
       });
 
       if (!res.ok) {

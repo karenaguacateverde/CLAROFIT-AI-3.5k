@@ -146,7 +146,21 @@ Diferenciadores declarados por el usuario:
   `/api/escanear` con `maxDuration=60` (subido de 15 por timeout de arranque en frío en producción).
   ⚠️ Pendiente: **Google OAuth no está habilitado en Supabase** ("Unsupported provider" al tocar
   "Continuar con Google") — falta crear credenciales OAuth en Google Cloud Console y pegarlas en
-  Supabase Auth → Providers → Google. El login por correo (magic link) sí funciona ya.
+  Supabase Auth → Providers → Google. El botón de Google se QUITÓ del login mientras tanto (código
+  intacto en git, se puede reactivar cuando se configure). El login por correo (magic link) sí
+  funciona — ⚠️ pero usa el servicio de correo gratis de Supabase, con límite bajo por hora; ya lo
+  agotamos varias veces probando. Pendiente: conectar Resend (ya decidido como proveedor del SO) para
+  quitar ese límite antes de vender de verdad.
+- ✅ **Panel de administración /admin CONSTRUIDO (2026-08-26):** protegido en 2 capas — middleware
+  redirige a `/login` sin sesión, y la página verifica en el servidor que el correo sea
+  `luciahouse483@gmail.com` (si no, `notFound()`, nunca revela que la ruta existe). Los datos se leen
+  con `lib/supabase/admin.ts` (llave `service_role`, nunca en el navegador) porque necesita ver todos
+  los usuarios saltándose el RLS a propósito. Tablas nuevas `ai_calls` (costo estimado por escaneo,
+  $0.002/llamada — estimado, no factura real) y `event_log` (base para analítica futura), ambas con
+  RLS activo SIN políticas (bloqueadas para anon/authenticated, solo el servidor las lee). Secciones
+  con datos reales: usuarios registrados/con escaneo, total de escaneos, plato más común, costo de IA
+  hoy/total. Secciones "no medido" (honestas, no inventadas): ventas, ganancia real, LTV/CAC, errores
+  — se llenan al conectar Hotmart y un servicio de monitoreo de errores.
 - ⚠️ **VEREDICTO PENDIENTE — landing, onboarding, paywall y la pantalla principal ("Hoy",
   `/app`)**: ninguna tiene todavía su
   `docs/revisiones/<slug>-veredicto.md` del subagente `revisor-visual` (con screenshot real a
