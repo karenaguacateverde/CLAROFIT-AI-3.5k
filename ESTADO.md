@@ -147,10 +147,19 @@ Diferenciadores declarados por el usuario:
   ⚠️ Pendiente: **Google OAuth no está habilitado en Supabase** ("Unsupported provider" al tocar
   "Continuar con Google") — falta crear credenciales OAuth en Google Cloud Console y pegarlas en
   Supabase Auth → Providers → Google. El botón de Google se QUITÓ del login mientras tanto (código
-  intacto en git, se puede reactivar cuando se configure). El login por correo (magic link) sí
-  funciona — ⚠️ pero usa el servicio de correo gratis de Supabase, con límite bajo por hora; ya lo
-  agotamos varias veces probando. Pendiente: conectar Resend (ya decidido como proveedor del SO) para
-  quitar ese límite antes de vender de verdad.
+  intacto en git, se puede reactivar cuando se configure). El login por correo (magic link) sí funciona.
+  ✅ **Resend CONECTADO (2026-08-26):** SMTP personalizado de Supabase configurado con Resend
+  (`smtp.resend.com`, remitente `onboarding@resend.dev` — dominio de prueba, solo entrega confiable a
+  la cuenta dueña de Resend hasta comprar dominio propio y verificarlo en Resend). Ya no depende del
+  límite gratis bajísimo de Supabase.
+  ✅ **Causa raíz real del login roto, resuelta (2026-08-26):** fallaba con "Failed to execute
+  'fetch'... String contains non ISO-8859-1 code point" porque `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`
+  en Vercel se guardó corrompida (200 caracteres de punto "•" en vez del JWT real) — pasó varias veces
+  al copiar/pegar en la consola de Vercel, causa exacta sin confirmar. Solución definitiva: esa URL y
+  esa llave (NO son secretas, viajan al navegador de todos modos) ya NO se leen de variables de
+  entorno — quedaron fijas en `lib/supabase/config.ts`, usadas por `client.ts`, `server.ts` y
+  `middleware.ts`. Verificado end-to-end: el bundle desplegado tiene el JWT completo y el envío del
+  magic link responde 200 real.
 - ✅ **Panel de administración /admin CONSTRUIDO (2026-08-26):** protegido en 2 capas — middleware
   redirige a `/login` sin sesión, y la página verifica en el servidor que el correo sea
   `luciahouse483@gmail.com` (si no, `notFound()`, nunca revela que la ruta existe). Los datos se leen
