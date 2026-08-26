@@ -6,7 +6,7 @@
 import { NextResponse } from 'next/server';
 
 export const runtime = 'nodejs';
-export const maxDuration = 15; // objetivo <5s real; margen para reintentos/latencia de red
+export const maxDuration = 60; // objetivo <5s real; margen amplio por arranque en frío + latencia de red
 
 const PROMPT = `Eres un nutricionista analizando una foto de un plato de comida casera o típica
 latinoamericana. Identifica el/los platos, y estima calorías y macros TOTALES del plato completo.
