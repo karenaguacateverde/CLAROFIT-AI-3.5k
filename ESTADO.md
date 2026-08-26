@@ -116,10 +116,10 @@ Diferenciadores declarados por el usuario:
   vision) y prueba de precisión con 6 platos LATAM reales, todos reconocidos correctamente
   (`scripts/test-ia/comparar-ia.mjs`, resultados en el historial de esta sesión).
   ✅ **Escaneo del onboarding también es real (2026-08-26):** `Step5Escaneo.tsx` ya llama a
-  `/api/escanear` con una foto de verdad que el usuario sube (decisión explícita: solo subir de
-  galería, sin botón de cámara, para no invitar a probar varias veces). Limitado a UN intento por
-  onboarding (control en el propio componente, `yaUsado`) — evita que alguien sin cuenta dispare
-  muchas llamadas a Gemini y genere costo. Falta definir el límite de escaneos por plan DESPUÉS del
+  `/api/escanear` con una foto de verdad que el usuario elige — dos botones, "Tomar foto" (cámara)
+  y "Subir foto" (galería), decisión final del usuario tras probar la versión solo-galería. Limitado
+  a UN intento por onboarding sin importar cuál botón use (control `yaUsado`) — evita que alguien
+  sin cuenta dispare muchas llamadas a Gemini y genere costo. Falta definir el límite de escaneos por plan DESPUÉS del
   paywall/trial — se decide con números exactos al conectar Hotmart (queda anotado para no perderlo).
   ⚠️ Nota de seguridad pendiente: `/api/escanear` no tiene límite de peticiones por IP todavía (solo
   el límite del lado del cliente en el onboarding) — antes de lanzar de verdad, conviene agregar un

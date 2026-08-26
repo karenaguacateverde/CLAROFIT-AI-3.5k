@@ -8,7 +8,7 @@
 
 import { useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Sparkles, Camera, AlertCircle } from 'lucide-react';
+import { Sparkles, Camera, Image as ImageIcon, AlertCircle } from 'lucide-react';
 import { PasoCta } from './OnboardingShell';
 
 type Estado = 'inicial' | 'analizando' | 'listo' | 'error';
@@ -22,7 +22,8 @@ interface Resultado {
 }
 
 export function Step5Escaneo({ onContinuar }: { onContinuar: () => void }) {
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputCamaraRef = useRef<HTMLInputElement>(null);
+  const inputGaleriaRef = useRef<HTMLInputElement>(null);
   const [estado, setEstado] = useState<Estado>('inicial');
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [resultado, setResultado] = useState<Resultado | null>(null);
@@ -77,19 +78,22 @@ export function Step5Escaneo({ onContinuar }: { onContinuar: () => void }) {
       </p>
 
       <input
-        ref={inputRef}
+        ref={inputCamaraRef}
+        type="file"
+        accept="image/*"
+        capture="environment"
+        onChange={onFotoElegida}
+        className="hidden"
+      />
+      <input
+        ref={inputGaleriaRef}
         type="file"
         accept="image/*"
         onChange={onFotoElegida}
         className="hidden"
       />
 
-      <button
-        type="button"
-        onClick={() => !yaUsado && inputRef.current?.click()}
-        disabled={yaUsado && estado !== 'error'}
-        className="relative mx-auto mt-8 block w-full max-w-xs overflow-hidden rounded-[var(--radius-card)] border border-[color-mix(in_oklab,var(--accent)_18%,transparent)] shadow-[var(--shadow-2)] [touch-action:manipulation]"
-      >
+      <div className="relative mx-auto mt-8 w-full max-w-xs overflow-hidden rounded-[var(--radius-card)] border border-[color-mix(in_oklab,var(--accent)_18%,transparent)] shadow-[var(--shadow-2)]">
         {previewUrl ? (
           <img
             src={previewUrl}
@@ -99,7 +103,7 @@ export function Step5Escaneo({ onContinuar }: { onContinuar: () => void }) {
             className="aspect-[4/5] w-full object-cover"
           />
         ) : (
-          <div className="flex aspect-[4/5] w-full flex-col items-center justify-center gap-3 bg-[var(--surface-2)] px-8">
+          <div className="flex aspect-[4/5] w-full flex-col items-center justify-center gap-4 bg-[var(--surface-2)] px-8">
             <span
               aria-hidden="true"
               className="flex size-14 items-center justify-center rounded-[var(--radius-button)] bg-[var(--chip-bg)]"
@@ -107,8 +111,28 @@ export function Step5Escaneo({ onContinuar }: { onContinuar: () => void }) {
               <Camera size={26} color="var(--accent)" aria-hidden="true" />
             </span>
             <p className="text-center text-[16px] font-medium text-[var(--text-secondary)]">
-              Toca para subir una foto de tu plato
+              Escanea tu plato para probarlo
             </p>
+            <div className="flex gap-3">
+              <button
+                type="button"
+                onClick={() => !yaUsado && inputCamaraRef.current?.click()}
+                disabled={yaUsado}
+                className="flex items-center gap-2 rounded-[var(--radius-button)] bg-[var(--accent)] px-4 py-2.5 text-[12px] font-semibold text-white [touch-action:manipulation] disabled:opacity-40"
+              >
+                <Camera size={16} aria-hidden="true" />
+                Tomar foto
+              </button>
+              <button
+                type="button"
+                onClick={() => !yaUsado && inputGaleriaRef.current?.click()}
+                disabled={yaUsado}
+                className="flex items-center gap-2 rounded-[var(--radius-button)] bg-[var(--surface)] px-4 py-2.5 text-[12px] font-semibold text-[var(--text-primary)] shadow-[var(--shadow-1)] [touch-action:manipulation] disabled:opacity-40"
+              >
+                <ImageIcon size={16} aria-hidden="true" />
+                Subir foto
+              </button>
+            </div>
           </div>
         )}
 
@@ -154,7 +178,7 @@ export function Step5Escaneo({ onContinuar }: { onContinuar: () => void }) {
             </motion.div>
           )}
         </AnimatePresence>
-      </button>
+      </div>
 
       {estado === 'error' && (
         <div className="mx-auto mt-4 flex max-w-xs items-start gap-2 text-[12px] text-[var(--urgencia)]">
