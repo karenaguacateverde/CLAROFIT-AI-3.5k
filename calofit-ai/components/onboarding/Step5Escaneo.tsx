@@ -1,17 +1,66 @@
 'use client';
 
-// PASO 5/8 — ACTIVACIÓN (el trabajo #3 de los 5). El usuario HACE algo, no lee
-// sobre la app. Demo honesta: foto de ejemplo real, análisis SIMULADO (el
-// backend de IA se conecta en la fase de "servicios externos" de la secuencia
-// maestra — no existe todavía). Nunca se presenta como una llamada real a IA.
+// PASO 5/8 — ACTIVACIÓN (el trabajo #3 de los 5). Escaneo REAL con la foto del
+// propio usuario (conectado 2026-08-26) — un solo intento por onboarding, sin
+// cámara (solo subir de galería) para no invitar a probar varias veces y
+// disparar el costo de IA antes de que exista cuenta/pago. Después del
+// paywall/trial, el límite por plan se define al conectar Hotmart.
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Sparkles } from 'lucide-react';
+import { Sparkles, Camera, AlertCircle } from 'lucide-react';
 import { PasoCta } from './OnboardingShell';
 
+type Estado = 'inicial' | 'analizando' | 'listo' | 'error';
+
+interface Resultado {
+  plato: string;
+  kcal: number;
+  carbs_g: number;
+  proteina_g: number;
+  grasa_g: number;
+}
+
 export function Step5Escaneo({ onContinuar }: { onContinuar: () => void }) {
-  const [estado, setEstado] = useState<'inicial' | 'analizando' | 'listo'>('inicial');
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [estado, setEstado] = useState<Estado>('inicial');
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [resultado, setResultado] = useState<Resultado | null>(null);
+  const [yaUsado, setYaUsado] = useState(false);
+
+  const onFotoElegida = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const archivo = e.target.files?.[0];
+    if (!archivo || yaUsado) return;
+
+    setYaUsado(true);
+    setPreviewUrl(URL.createObjectURL(archivo));
+    setEstado('analizando');
+
+    try {
+      const imagenB64 = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve((reader.result as string).split(',')[1] ?? '');
+        reader.onerror = reject;
+        reader.readAsDataURL(archivo);
+      });
+
+      const res = await fetch('/api/escanear', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ imagenB64 }),
+      });
+
+      if (!res.ok) {
+        setEstado('error');
+        return;
+      }
+
+      setResultado(await res.json());
+      setEstado('listo');
+    } catch {
+      setEstado('error');
+    }
+  };
 
   return (
     <motion.div
@@ -24,17 +73,44 @@ export function Step5Escaneo({ onContinuar }: { onContinuar: () => void }) {
         Prueba el <span className="text-[var(--accent)]">Escaneo Casero</span>
       </h1>
       <p className="mt-2 text-[16px] text-[var(--text-secondary)]">
-        Así se ve un análisis real — toca el plato para probarlo.
+        Sube una foto de tu comida y mira la magia — es un análisis real.
       </p>
 
-      <div className="relative mx-auto mt-8 w-full max-w-xs overflow-hidden rounded-[var(--radius-card)] border border-[color-mix(in_oklab,var(--accent)_18%,transparent)] shadow-[var(--shadow-2)]">
-        <img
-          src="/landing/frame-escaneo.jpg"
-          alt="Plato de ejemplo para probar el Escaneo Casero"
-          width={400}
-          height={520}
-          className="aspect-[4/5] w-full object-cover"
-        />
+      <input
+        ref={inputRef}
+        type="file"
+        accept="image/*"
+        onChange={onFotoElegida}
+        className="hidden"
+      />
+
+      <button
+        type="button"
+        onClick={() => !yaUsado && inputRef.current?.click()}
+        disabled={yaUsado && estado !== 'error'}
+        className="relative mx-auto mt-8 block w-full max-w-xs overflow-hidden rounded-[var(--radius-card)] border border-[color-mix(in_oklab,var(--accent)_18%,transparent)] shadow-[var(--shadow-2)] [touch-action:manipulation]"
+      >
+        {previewUrl ? (
+          <img
+            src={previewUrl}
+            alt="Tu plato"
+            width={400}
+            height={520}
+            className="aspect-[4/5] w-full object-cover"
+          />
+        ) : (
+          <div className="flex aspect-[4/5] w-full flex-col items-center justify-center gap-3 bg-[var(--surface-2)] px-8">
+            <span
+              aria-hidden="true"
+              className="flex size-14 items-center justify-center rounded-[var(--radius-button)] bg-[var(--chip-bg)]"
+            >
+              <Camera size={26} color="var(--accent)" aria-hidden="true" />
+            </span>
+            <p className="text-center text-[16px] font-medium text-[var(--text-secondary)]">
+              Toca para subir una foto de tu plato
+            </p>
+          </div>
+        )}
 
         <AnimatePresence>
           {estado === 'analizando' && (
@@ -57,43 +133,45 @@ export function Step5Escaneo({ onContinuar }: { onContinuar: () => void }) {
         </AnimatePresence>
 
         <AnimatePresence>
-          {estado === 'listo' && (
+          {estado === 'listo' && resultado && (
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3 }}
-              className="absolute inset-x-0 bottom-0 rounded-t-[var(--radius-card)] bg-[var(--surface)] p-4"
+              className="absolute inset-x-0 bottom-0 rounded-t-[var(--radius-card)] bg-[var(--surface)] p-4 text-left"
             >
               <p className="text-[12px] font-semibold uppercase tracking-[0.06em] text-[var(--accent)]">
-                Análisis completado
+                {resultado.plato}
               </p>
-              <p className="mt-1 text-[24px] font-bold leading-none [font-family:var(--font-display)]">520 kcal</p>
+              <p className="mt-1 text-[24px] font-bold leading-none [font-family:var(--font-display)]">
+                {resultado.kcal} kcal
+              </p>
               <div className="mt-2 flex gap-4 text-[12px] text-[var(--text-secondary)]">
-                <span>Carbs 63%</span>
-                <span>Proteína 31%</span>
-                <span>Grasa 17%</span>
+                <span>Carbs {resultado.carbs_g}g</span>
+                <span>Proteína {resultado.proteina_g}g</span>
+                <span>Grasa {resultado.grasa_g}g</span>
               </div>
             </motion.div>
           )}
         </AnimatePresence>
-      </div>
+      </button>
 
-      {estado === 'inicial' && (
-        <button
-          type="button"
-          onClick={() => {
-            setEstado('analizando');
-            setTimeout(() => setEstado('listo'), 1500);
-          }}
-          className="mx-auto mt-6 text-[16px] font-semibold text-[var(--accent)] [touch-action:manipulation]"
-        >
-          Toca para analizar →
-        </button>
+      {estado === 'error' && (
+        <div className="mx-auto mt-4 flex max-w-xs items-start gap-2 text-[12px] text-[var(--urgencia)]">
+          <AlertCircle size={16} aria-hidden="true" className="mt-0.5 shrink-0" />
+          No se pudo analizar esa foto. Toca la imagen para intentar con otra.
+        </div>
+      )}
+
+      {yaUsado && estado !== 'error' && (
+        <p className="mx-auto mt-4 max-w-xs text-center text-[12px] text-[var(--text-tertiary)]">
+          Este es tu adelanto gratis — al crear tu cuenta escaneas todo lo que quieras.
+        </p>
       )}
 
       <div className="mt-auto pt-10">
         <PasoCta onClick={onContinuar} disabled={estado !== 'listo'}>
-          {estado === 'listo' ? 'Genial, sigamos' : 'Analiza el plato para continuar'}
+          {estado === 'listo' ? 'Genial, sigamos' : 'Sube una foto para continuar'}
         </PasoCta>
       </div>
     </motion.div>

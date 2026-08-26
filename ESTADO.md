@@ -115,8 +115,15 @@ Diferenciadores declarados por el usuario:
   `gemini-3.6-flash` — elegido tras investigación de costo (~3x más barato que Claude Haiku en
   vision) y prueba de precisión con 6 platos LATAM reales, todos reconocidos correctamente
   (`scripts/test-ia/comparar-ia.mjs`, resultados en el historial de esta sesión).
-  El escaneo del **onboarding** (`Step5Escaneo.tsx`) sigue siendo demo simulada a propósito — no
-  necesita IA real, es solo para mostrar el mecanismo antes de que exista cuenta/paywall.
+  ✅ **Escaneo del onboarding también es real (2026-08-26):** `Step5Escaneo.tsx` ya llama a
+  `/api/escanear` con una foto de verdad que el usuario sube (decisión explícita: solo subir de
+  galería, sin botón de cámara, para no invitar a probar varias veces). Limitado a UN intento por
+  onboarding (control en el propio componente, `yaUsado`) — evita que alguien sin cuenta dispare
+  muchas llamadas a Gemini y genere costo. Falta definir el límite de escaneos por plan DESPUÉS del
+  paywall/trial — se decide con números exactos al conectar Hotmart (queda anotado para no perderlo).
+  ⚠️ Nota de seguridad pendiente: `/api/escanear` no tiene límite de peticiones por IP todavía (solo
+  el límite del lado del cliente en el onboarding) — antes de lanzar de verdad, conviene agregar un
+  límite en el servidor también, por si alguien intenta saltarse el límite del navegador.
   El **ajuste conversacional** (corregir hablando) sigue simulado — es una función aparte, no
   conectada todavía.
   ✅ **Supabase CONECTADO (2026-08-26):** tablas `profiles` (con trigger que crea el perfil solo al
