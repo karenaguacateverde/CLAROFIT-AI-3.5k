@@ -134,14 +134,19 @@ Diferenciadores declarados por el usuario:
   guardar el `nombre`/`objetivo` del onboarding en `profiles` (hoy solo vive en memoria del navegador
   durante el onboarding, se pierde al llegar al login) — no es bloqueante, pero el nombre en "Hoy"
   saldrá vacío hasta que se conecte.
-- ⚠️ **GitHub: repo creado, código NO subido todavía (2026-08-25).** Repo privado creado
-  (`github.com/karenaguacateverde/CLAROFIT-AI-3.5k`), remote `origin` ya configurado localmente.
-  El código está a salvo en un commit local (`git log` en la raíz del proyecto), pero el push falló
-  repetidamente por problemas de copiar/pegar en la Terminal de la Chromebook (el token se pegaba en
-  el lugar equivocado, expuesto y regenerado varias veces — todos esos tokens quedaron invalidados).
-  Se intentó cambiar a autenticación por llave SSH (más robusta, sin tokens) pero se dejó pendiente
-  a pedido del usuario para retomarlo después. Próximo intento: terminar `ssh-keygen` +
-  agregar la llave pública en `github.com/settings/ssh/new` + `git push` por SSH.
+- ✅ **GitHub CONECTADO (2026-08-26):** repo `github.com/karenaguacateverde/CLAROFIT-AI-3.5k` —
+  ⚠️ quedó como **público**, no privado como se pidió al crearlo (revisar/corregir cuando el usuario
+  quiera). Push funciona por llave SSH (`git@github.com:karenaguacateverde/CLAROFIT-AI-3.5k.git`).
+  Cada commit se sube directo desde aquí sin pasos manuales de la usuaria.
+- ✅ **Publicada en Vercel (2026-08-26):** proyecto `clarofit-ai-3-5k`, dominio ESTABLE (no cambia
+  entre despliegues): **https://clarofit-ai-3-5k.vercel.app** — usar SIEMPRE este, no la URL con hash
+  de cada deployment. Auto-deploy activo en cada push a `master`. Variables de entorno ya configuradas
+  en Vercel (las 5: Supabase x4 + GEMINI_API_KEY). `NEXT_PUBLIC_SUPABASE_URL`/`SITE URL` de Supabase
+  Auth apuntando a ese dominio estable (URL Configuration del dashboard de Supabase, ya actualizado).
+  `/api/escanear` con `maxDuration=60` (subido de 15 por timeout de arranque en frío en producción).
+  ⚠️ Pendiente: **Google OAuth no está habilitado en Supabase** ("Unsupported provider" al tocar
+  "Continuar con Google") — falta crear credenciales OAuth en Google Cloud Console y pegarlas en
+  Supabase Auth → Providers → Google. El login por correo (magic link) sí funciona ya.
 - ⚠️ **VEREDICTO PENDIENTE — landing, onboarding, paywall y la pantalla principal ("Hoy",
   `/app`)**: ninguna tiene todavía su
   `docs/revisiones/<slug>-veredicto.md` del subagente `revisor-visual` (con screenshot real a
