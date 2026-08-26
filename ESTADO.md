@@ -104,9 +104,11 @@ Diferenciadores declarados por el usuario:
   para que el paywall tenga a dónde llevar al usuario.
 
 ## Problemas conocidos
-- `/login` no existe — el CTA final del paywall del onboarding queda sin destino real hasta que se construya.
-  El usuario decidió explícitamente construir la app interna ANTES del login (2026-08-24) — no es
-  un olvido, es orden de trabajo elegido a propósito, fuera de la secuencia maestra estándar.
+- ✅ **Login CONSTRUIDO (2026-08-25):** `/login` (magic link por correo + Google OAuth vía Supabase
+  Auth), `middleware.ts` protege `/app/*` (sin sesión → redirige a `/login`, verificado). El CTA
+  final del paywall (`Step8Paywall.tsx`) ya apunta a `/login`. Falta: conectar el botón "Cerrar
+  sesión" de `/app/perfil` (hoy deshabilitado) y decidir si el flujo de onboarding pasa por login
+  ANTES o DESPUÉS del paywall (hoy es después, como estaba planeado).
 - ✅ **Backend de IA CONECTADO (2026-08-25):** `/app/escanear` ya llama a Gemini de verdad vía
   `app/api/escanear/route.ts` (BFF — `GEMINI_API_KEY` solo en el servidor, en `.env.local`, nunca
   en el navegador). Probado con foto real (gallo pinto → 650 kcal, confianza alta). Modelo:
@@ -119,6 +121,14 @@ Diferenciadores declarados por el usuario:
   conectada todavía.
   Tampoco hay Supabase conectado: los datos de las 4 pantallas de `/app` (excepto el resultado del
   escaneo) son de ejemplo, no persisten entre sesiones ni se comparten entre pantallas.
+- ⚠️ **GitHub: repo creado, código NO subido todavía (2026-08-25).** Repo privado creado
+  (`github.com/karenaguacateverde/CLAROFIT-AI-3.5k`), remote `origin` ya configurado localmente.
+  El código está a salvo en un commit local (`git log` en la raíz del proyecto), pero el push falló
+  repetidamente por problemas de copiar/pegar en la Terminal de la Chromebook (el token se pegaba en
+  el lugar equivocado, expuesto y regenerado varias veces — todos esos tokens quedaron invalidados).
+  Se intentó cambiar a autenticación por llave SSH (más robusta, sin tokens) pero se dejó pendiente
+  a pedido del usuario para retomarlo después. Próximo intento: terminar `ssh-keygen` +
+  agregar la llave pública en `github.com/settings/ssh/new` + `git push` por SSH.
 - ⚠️ **VEREDICTO PENDIENTE — landing, onboarding, paywall y la pantalla principal ("Hoy",
   `/app`)**: ninguna tiene todavía su
   `docs/revisiones/<slug>-veredicto.md` del subagente `revisor-visual` (con screenshot real a
