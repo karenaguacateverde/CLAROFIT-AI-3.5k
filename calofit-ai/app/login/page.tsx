@@ -9,7 +9,7 @@ import { motion } from 'motion/react';
 import { Mail, Check, AlertCircle } from 'lucide-react';
 import { crearClienteSupabase } from '@/lib/supabase/client';
 
-type Estado = 'inicial' | 'enviando' | 'enviado' | 'error';
+type Estado = 'inicial' | 'enviando' | 'enviado' | 'error' | 'espera';
 
 export default function LoginPage() {
   const [correo, setCorreo] = useState('');
@@ -26,7 +26,13 @@ export default function LoginPage() {
       options: { emailRedirectTo: `${window.location.origin}/auth/callback` },
     });
 
-    setEstado(error ? 'error' : 'enviado');
+    if (!error) {
+      setEstado('enviado');
+    } else if (error.status === 429 || error.code === 'over_email_send_rate_limit') {
+      setEstado('espera');
+    } else {
+      setEstado('error');
+    }
   };
 
   return (
@@ -52,9 +58,10 @@ export default function LoginPage() {
           >
             <Check size={20} color="var(--accent-2)" aria-hidden="true" className="mt-0.5 shrink-0" />
             <div>
-              <p className="text-[16px] font-semibold text-[var(--text-primary)]">Revisa tu correo</p>
+              <p className="text-[16px] font-semibold text-[var(--text-primary)]">Revisa tu correo ahora</p>
               <p className="mt-1 text-[12px] text-[var(--text-secondary)]">
-                Te mandamos un link a {correo}. Tócalo desde tu celular o compu para entrar.
+                Abre tu app de correo (Gmail) — te mandamos un link a {correo}. Tócalo ahí para entrar,
+                no aquí.
               </p>
             </div>
           </motion.div>
@@ -77,6 +84,13 @@ export default function LoginPage() {
                 className="h-14 w-full rounded-[var(--radius-button)] border border-[color-mix(in_oklab,var(--text-tertiary)_25%,transparent)] bg-[var(--surface)] pl-11 pr-4 text-[16px] text-[var(--text-primary)] outline-none focus:border-[var(--accent)]"
               />
             </div>
+
+            {estado === 'espera' && (
+              <div className="mt-3 flex items-center gap-2 text-[12px] text-[var(--text-secondary)]">
+                <AlertCircle size={16} aria-hidden="true" />
+                Ya te mandamos uno hace poco — revisa tu correo, ahí debería estar.
+              </div>
+            )}
 
             {estado === 'error' && (
               <div className="mt-3 flex items-center gap-2 text-[12px] text-[var(--urgencia)]">
