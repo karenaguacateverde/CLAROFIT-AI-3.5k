@@ -175,6 +175,7 @@ export function Step5Escaneo({ onContinuar }: { onContinuar: () => void }) {
                 <span>Proteína {resultado.proteina_g}g</span>
                 <span>Grasa {resultado.grasa_g}g</span>
               </div>
+              <p className="mt-2 text-[12px] text-[var(--text-tertiary)]">Estimado por IA, puede tener errores.</p>
             </motion.div>
           )}
         </AnimatePresence>

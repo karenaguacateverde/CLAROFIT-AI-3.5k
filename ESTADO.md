@@ -185,3 +185,31 @@ Diferenciadores declarados por el usuario:
   el sistema lo prohíbe explícitamente (autoevaluarse está prohibido). Pendiente: retomar en un
   entorno con captura de pantalla a archivo disponible (o pedir la captura al usuario) y lanzar el
   `revisor-visual` sobre landing, onboarding, paywall y "Hoy" antes de considerarlas certificadas.
+- ✅ **AUDITORÍA LEGAL COMPLETADA (2026-08-26)** — ver reporte completo en el chat de esa fecha.
+  Resumen: las 4 páginas legales obligatorias (Privacidad, Términos, Reembolsos, Aviso de IA) NO
+  EXISTÍAN — los links del footer y del login apuntaban a rutas rotas. Se crearon las 4, adaptadas a
+  **RGPD** (el usuario opera desde España, no LATAM) con subprocesadores nombrados (Supabase, Google
+  Gemini, Vercel, Resend, Hotmart), transferencia internacional a Gemini declarada, y coherentes con
+  el producto real. Se conectó el **borrado de cuenta real** (`/api/cuenta/eliminar` + botón en
+  Perfil con doble confirmación) — antes era solo una promesa sin implementar. Se agregó el
+  micro-disclaimer de IA junto al resultado del escaneo (app y onboarding). Se corrigió el correo del
+  footer (`soporte@calofit.ai` no existe — dominio no comprado; ahora usa el correo real). Se
+  corrigió la garantía en `FICHA-MERCADO.md` (decía 15 días, el código siempre dijo 7 — se alinea
+  con la realidad ya implementada).
+  ⚠️ **Pendientes que solo el dueño puede cerrar:**
+  - Rellenar el nombre legal completo en `app/privacidad/page.tsx` (placeholder `[TU NOMBRE
+    COMPLETO]` — el usuario no lo dio, dijo "aún no tengo empresa").
+  - Al crear el producto en Hotmart: configurar la garantía en **7 días** (no el default) para que
+    coincida con todo el copy publicado.
+  - Los 🚩 RIESGOS DE INTEGRIDAD de `FICHA-MERCADO.md` (precio ancla $27 falso, testimonios/reseñas
+    inventados, estadísticas infladas, funciones prometidas que no existen — planificador semanal,
+    lista de compras, recetas de batidos, plan de 21 días) siguen sin resolver — el usuario los
+    confirmó explícitamente pero **no se corrigieron en esta auditoría** (es un tema de honestidad
+    de marketing/producto, no de qué página legal falta) — revisar antes de lanzar de verdad.
+  - No hay checkbox explícito de consentimiento en el registro (login passwordless) — solo un link
+    "al continuar aceptas...". Es una práctica común y defendible bajo RGPD para esta base legal
+    (ejecución de contrato), pero un checkbox no premarcado sería más robusto — decisión de producto
+    del dueño, no bloqueante.
+  - Validar con un abogado en España si se supera un volumen relevante de ventas o si se maneja
+    algún dato de salud más allá de lo actual (calorías autoreportadas ≠ dato médico, pero conviene
+    confirmarlo si el negocio crece).

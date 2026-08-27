@@ -215,6 +215,9 @@ export default function EscanearPage() {
                   <p className="text-[12px] text-[var(--text-tertiary)]">Grasa</p>
                 </div>
               </div>
+              <p className="mt-4 text-[12px] text-[var(--text-tertiary)]">
+                Estimado por IA, puede tener errores — no sustituye el consejo de un nutricionista.
+              </p>
             </div>
 
             {/* Ajuste conversacional — el diferenciador #3 del MVP (todavía simulado) */}

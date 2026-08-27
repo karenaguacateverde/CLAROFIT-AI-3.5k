@@ -293,7 +293,7 @@ export default function LandingCalofitAI() {
       {/* 10. FOOTER LEGAL — enlaces PENDIENTES de contenido real (ver 47) */}
       <FooterLegal
         appName="Calofit AI"
-        soporteEmail="soporte@calofit.ai"
+        soporteEmail="luciahouse483@gmail.com"
         enlaces={[
           { label: 'Privacidad', href: '/privacidad' },
           { label: 'Términos y Condiciones', href: '/terminos' },

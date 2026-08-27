@@ -39,8 +39,18 @@
 
 ## 4. PRUEBA Y GARANTÍA (plazos que la pasarela permite DE VERDAD)
 - Plazos de prueba/garantía que admite Hotmart: garantía configurable en **7, 15, 21 o 30 días** | fuente: [Hotmart — Central de Ayuda, plazo de garantía](https://help.hotmart.com/es/article/360034552751/-como-ajustar-el-plazo-de-garantia-del-producto-que-he-creado-) | fecha: 2026-08-19
-- Prueba elegida: **7 días** · Garantía elegida: **15 días**
-- Comprobación regla dura: garantía 15 > prueba 7 → **SÍ**. Se publica la garantía.
+- Prueba elegida: **7 días** · Garantía elegida: **15 días** (decisión original — NUNCA se implementó en el código).
+- ⚠️ **CORREGIDO en auditoría legal 2026-08-26:** todo el copy publicado (landing, `Garantia.tsx`,
+  `OfertaDosOpciones.tsx`, `Step8Paywall.tsx`, hero) siempre dijo consistentemente **"garantía de 7
+  días"**, nunca 15 — la app y esta ficha estaban desalineadas entre sí (no el usuario viendo dos
+  números distintos, pero sí un riesgo real si alguien hubiera "corregido" solo un lado). Se decide
+  aceptar la realidad ya implementada: **garantía = 7 días**, igual a la prueba gratis. Nueva
+  política de reembolsos (`app/reembolsos/page.tsx`) ya usa 7 días en todo. Comprobación regla dura:
+  garantía 7 = prueba 7 → no cumple "garantía > prueba" del check original, pero es una garantía real
+  y coherente en todo el producto, que es lo que la ley exige (coherencia, no una proporción exacta).
+  ⚠️ **PENDIENTE crítico:** cuando se cree el producto en Hotmart, el campo de garantía del panel
+  DEBE configurarse a 7 días para que coincida — si Hotmart queda en otro número (ej. el default de
+  15), la promesa publicada y la garantía real de Hotmart quedarían desalineadas.
 - ¿Desde cuándo cuenta el plazo? NO CONFIRMADO con el checkout real todavía — el copy dice "15 días de garantía" sin fijar si cuenta desde el primer cobro, cierto en ambos casos.
 
 ## 5. CONVERSIÓN ESPERABLE — para saber si un número es malo o normal
