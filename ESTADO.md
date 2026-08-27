@@ -222,3 +222,31 @@ Diferenciadores declarados por el usuario:
   revocado para `anon`/`authenticated` — el `REVOKE` anterior no cubría el permiso heredado de
   `PUBLIC`. Ya está cerrado (solo `postgres`/`service_role`). Verificado también que la llave secreta
   de Supabase no aparece en ningún archivo del navegador (build revisado). Sin más hallazgos.
+- ✅ **Hotmart CONECTADO y webhook probado end-to-end (2026-08-27):** producto creado en Hotmart
+  (ID 8400476, "Calofit AI"), 2 planes con checkout real conectados al paywall (`Step8Paywall.tsx`):
+  mensual $7 (`?off=9afive6v`) y anual $48/año≈$4/mes (`?off=rnlbgq2d`). Webhook en
+  `app/api/webhooks/hotmart/route.ts` con las 4 defensas de `18-VENTA-HOTMART.md` (hottok en tiempo
+  constante, ventana anti-replay de 24h, dedupe por `processed_events`, máquina de estados en
+  `lib/membership-fsm.ts` que bloquea reactivar un reembolso/chargeback). `HOTMART_HOTTOK` en Vercel
+  como tipo Secret (no Config — a diferencia de la llave pública de Supabase, este sí es secreto de
+  verdad). Probado con el botón "Enviar test" de Hotmart: los 7 eventos terminaron en
+  "200 - Procesado". Causa raíz de 3 rondas de fallos (ahora resueltas):
+  1) ventana anti-replay de 5 min rechazaba las fechas fijas/viejas del payload de prueba de Hotmart
+     → subida a 24h;
+  2) `admin.auth.admin.createUser()` fallaba con "Database error creating new user" cuando llegaban
+     varios eventos casi simultáneos con el mismo correo (el botón de prueba dispara 6-7 a la vez) →
+     reemplazado por la función `buscar_o_crear_usuario_por_email` (INSERT...ON CONFLICT atómico
+     sobre el índice único de `auth.users`), sin depender de la API de GoTrue para este caso.
+  ⚠️ Pendientes reales antes de vender de verdad:
+  - Nombres de eventos y forma del payload solo verificados con el botón de prueba, NO con una
+    compra/trial real — el evento de inicio de trial sigue siendo el placeholder
+    `SUBSCRIPTION_TRIAL_START` sin confirmar contra el payload real de esta cuenta (ver mini-
+    procedimiento de 5 pasos en `18-VENTA-HOTMART.md`).
+  - `access_until`/`grace_ends_at` no se están fijando todavía al cancelar/atrasar un pago (el
+    usuario pierde acceso inmediato en vez de al final del período ya pagado) — falta el campo real
+    del payload de Hotmart para calcular esa fecha.
+  - No hay reconciliación semanal ni ledger de pagos (`payment_transactions`) — quedó fuera de
+    alcance de esta sesión por tiempo, documentado como mejora futura si el negocio escala.
+  - Falta hacer la PRUEBA E2E real (comprar de verdad o en sandbox, no solo el botón de test) antes
+    de anunciar que se puede comprar — el botón de test confirma que el endpoint responde bien, no
+    reemplaza una compra real de punta a punta (login con el correo, acceso Pro real en la app).
