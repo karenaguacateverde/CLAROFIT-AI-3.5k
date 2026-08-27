@@ -108,10 +108,16 @@ export async function POST(req: Request) {
       email_confirm: true,
     });
     if (crearError || !nuevoUsuario?.user) {
-      await registrarLog(admin, eventId, event, 'error');
-      return NextResponse.json({ error: 'no se pudo crear la cuenta' }, { status: 500 });
+      // Carrera entre dos eventos casi simultáneos con el mismo correo: el otro ya lo creó.
+      const { data: reintento } = await admin.rpc('buscar_usuario_id_por_email', { p_email: email });
+      if (!reintento) {
+        await registrarLog(admin, eventId, event, 'error');
+        return NextResponse.json({ error: 'no se pudo crear la cuenta' }, { status: 500 });
+      }
+      userId = reintento;
+    } else {
+      userId = nuevoUsuario.user.id;
     }
-    userId = nuevoUsuario.user.id;
   }
 
   // 6. Autorización — no dejar que un evento viejo reactive un reembolso/chargeback.
