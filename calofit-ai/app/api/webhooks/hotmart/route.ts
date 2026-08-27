@@ -108,8 +108,15 @@ export async function POST(req: Request) {
       email_confirm: true,
     });
     if (crearError || !nuevoUsuario?.user) {
-      // Carrera entre dos eventos casi simultáneos con el mismo correo: el otro ya lo creó.
-      const { data: reintento } = await admin.rpc('buscar_usuario_id_por_email', { p_email: email });
+      // Carrera entre varios eventos casi simultáneos con el mismo correo (típico del botón
+      // "Enviar test" de Hotmart, que dispara 6+ eventos a la vez): reintenta con pequeñas
+      // esperas mientras el que sí ganó la carrera termina de confirmar su transacción.
+      let reintento: string | null = null;
+      for (let intento = 0; intento < 4 && !reintento; intento++) {
+        await new Promise((r) => setTimeout(r, 300));
+        const { data } = await admin.rpc('buscar_usuario_id_por_email', { p_email: email });
+        reintento = data ?? null;
+      }
       if (!reintento) {
         await registrarLog(admin, eventId, event, 'error');
         return NextResponse.json({ error: 'no se pudo crear la cuenta' }, { status: 500 });
