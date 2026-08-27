@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Trash2 } from 'lucide-react';
+import { Trash2, AlertTriangle } from 'lucide-react';
 
 export function EliminarCuentaBoton() {
   const router = useRouter();
@@ -26,6 +26,25 @@ export function EliminarCuentaBoton() {
         <p className="text-[16px] font-semibold text-[var(--text-primary)]">
           ¿Seguro? Esto borra tu cuenta y todo tu historial para siempre.
         </p>
+
+        <div className="mt-3 flex items-start gap-2 rounded-[var(--radius-card)] bg-[var(--surface)] p-3">
+          <AlertTriangle size={16} color="var(--urgencia)" aria-hidden="true" className="mt-0.5 shrink-0" />
+          <p className="text-[12px] text-[var(--text-secondary)]">
+            <strong className="text-[var(--text-primary)]">Importante:</strong> borrar tu cuenta aquí NO
+            cancela tu suscripción de pago en Hotmart. Si tienes una suscripción activa, cancélala primero
+            en Hotmart (en el correo de tu compra o en{' '}
+            <a
+              href="https://sac.hotmart.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline"
+            >
+              sac.hotmart.com
+            </a>
+            ), o seguirán cobrándote aunque tu cuenta ya no exista.
+          </p>
+        </div>
+
         <div className="mt-3 flex gap-2">
           <button
             type="button"

@@ -213,3 +213,12 @@ Diferenciadores declarados por el usuario:
   - Validar con un abogado en España si se supera un volumen relevante de ventas o si se maneja
     algún dato de salud más allá de lo actual (calorías autoreportadas ≠ dato médico, pero conviene
     confirmarlo si el negocio crece).
+- ✅ **Repaso de seguridad post-auditoría legal (2026-08-26):** prueba real del borrado de cuenta
+  (usuario de prueba con perfil + comida + llamada de IA → se borró perfil y comida, la llamada de
+  IA quedó sin dato personal) — funciona como se documentó. Se agregó aviso explícito de "cancela
+  primero tu suscripción en Hotmart" antes de borrar (borrar la cuenta NO cancela el cobro
+  recurrente — son sistemas distintos). Se encontró y corrigió un hueco real: la función que crea el
+  perfil al registrarse seguía siendo ejecutable por CUALQUIERA (`PUBLIC`) vía RPC aunque ya se había
+  revocado para `anon`/`authenticated` — el `REVOKE` anterior no cubría el permiso heredado de
+  `PUBLIC`. Ya está cerrado (solo `postgres`/`service_role`). Verificado también que la llave secreta
+  de Supabase no aparece en ningún archivo del navegador (build revisado). Sin más hallazgos.
