@@ -32,6 +32,11 @@ export default function PrivacidadPage() {
           procesa directamente nuestra pasarela de pago (Hotmart), nunca los vemos ni los guardamos
           nosotros.
         </p>
+        <p>
+          Darnos tu nombre y correo es necesario para poder crear tu cuenta — sin ellos no podemos
+          ofrecerte el servicio. Subir fotos es voluntario: es la función principal de la app, pero puedes
+          decidir no usarla en cualquier momento.
+        </p>
       </LegalSeccion>
 
       <LegalSeccion titulo="3. Para qué usamos tus datos y con qué base legal">
@@ -48,6 +53,26 @@ export default function PrivacidadPage() {
             sección 4).
           </li>
         </ul>
+        <p>
+          Puedes retirar tu consentimiento en cualquier momento (por ejemplo, dejando de usar el escaneo
+          de fotos, o eliminando tu cuenta) sin que eso afecte la licitud del tratamiento hecho antes de
+          retirarlo.
+        </p>
+      </LegalSeccion>
+
+      <LegalSeccion titulo="4B. Decisiones automatizadas y transparencia de IA">
+        <p>
+          Calofit AI usa un sistema de inteligencia artificial para generar automáticamente el resultado
+          de calorías y macros a partir de tu foto — es una función central de la app, así que no hay
+          revisión humana de cada resultado individual. Esto <strong>no es una decisión automatizada con
+          efectos legales o significativos sobre ti</strong> en el sentido del art. 22 RGPD: es
+          información orientativa que tú interpretas y decides usar o no (ver nuestro{' '}
+          <a href="/aviso-ia" className="underline">
+            Aviso sobre el uso de IA
+          </a>
+          ). Conforme al Reglamento europeo de IA (2026), te informamos con claridad, dentro de la propia
+          app, cada vez que estás viendo un resultado generado por IA.
+        </p>
       </LegalSeccion>
 
       <LegalSeccion titulo="4. Con quién compartimos tus datos (subprocesadores)">
@@ -85,7 +110,10 @@ export default function PrivacidadPage() {
       <LegalSeccion titulo="6. Cuánto tiempo guardamos tus datos">
         <p>
           Mientras tu cuenta exista, guardamos tu perfil y tu historial de comidas para que puedas ver tu
-          progreso. Si eliminas tu cuenta, todo lo anterior se borra de inmediato (ver sección 7).
+          progreso. Si eliminas tu cuenta, todo lo anterior se borra de inmediato de nuestra base de datos
+          activa (ver sección 7). Puede quedar en copias de seguridad técnicas de corta duración hasta
+          que el ciclo normal de respaldo las sobrescriba (no es una copia que consultemos ni usemos —
+          es solo para poder recuperar el servicio ante una falla técnica).
         </p>
       </LegalSeccion>
 
@@ -130,7 +158,18 @@ export default function PrivacidadPage() {
         </p>
       </LegalSeccion>
 
-      <LegalSeccion titulo="10. Cambios a esta política">
+      <LegalSeccion titulo="10. Si nos escribes o compras desde otro país">
+        <p>
+          Tratamos tus datos conforme al RGPD europeo, que es de los estándares de protección de datos
+          más exigentes del mundo — por eso aplicamos los mismos derechos y garantías de esta política a
+          cualquier persona que use Calofit AI, sin importar desde qué país nos escribas o compres. Si tu
+          país tiene una ley de protección de datos propia (por ejemplo, la LGPD en Brasil, la Ley 1581 en
+          Colombia o la LFPDPPP en México) con derechos adicionales específicos, contáctanos y los
+          atendemos igual.
+        </p>
+      </LegalSeccion>
+
+      <LegalSeccion titulo="11. Cambios a esta política">
         <p>
           Si hacemos un cambio importante en cómo tratamos tus datos, te avisaremos por correo antes de
           que entre en vigor. La fecha de la última actualización siempre está visible arriba de esta
