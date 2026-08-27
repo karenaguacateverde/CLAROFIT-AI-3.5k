@@ -16,7 +16,11 @@ import { crearClienteSupabaseAdmin } from '@/lib/supabase/admin';
 
 export const runtime = 'nodejs';
 
-const REPLAY_WINDOW_MS = 5 * 60 * 1000;
+// 24h en vez de los 5 min "de libro": la idempotencia (processed_events) ya bloquea el replay
+// literal del mismo evento; esta ventana solo evita fechas absurdamente viejas. 5 min rechazaba
+// hasta los eventos de prueba de Hotmart (traen una fecha fija/vieja) y un webhook real reentregado
+// tras una caída puede llegar horas después — mejor procesarlo tarde que perderlo en silencio.
+const REPLAY_WINDOW_MS = 24 * 60 * 60 * 1000;
 
 async function registrarLog(
   admin: ReturnType<typeof crearClienteSupabaseAdmin>,
