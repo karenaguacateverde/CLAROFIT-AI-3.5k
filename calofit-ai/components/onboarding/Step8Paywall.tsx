@@ -14,6 +14,10 @@ import { motion } from 'motion/react';
 import { Check } from 'lucide-react';
 import type { Objetivo } from './Step2Objetivo';
 
+// Links reales del checkout de Hotmart (producto creado 2026-08-27).
+const CHECKOUT_ANUAL = 'https://pay.hotmart.com/X107349684K?off=rnlbgq2d';
+const CHECKOUT_MENSUAL = 'https://pay.hotmart.com/X107349684K?off=9afive6v';
+
 const FEATURES = [
   'Foto → calorías y macros en segundos',
   'Reconoce comida casera y típica LATAM',
@@ -47,12 +51,10 @@ export function Step8Paywall({
   nombre,
   objetivo,
   meta,
-  ctaHref,
 }: {
   nombre: string;
   objetivo: Objetivo;
   meta: number;
-  ctaHref: string;
 }) {
   const [plan, setPlan] = useState<'basico' | 'vendido'>('vendido');
 
@@ -198,7 +200,7 @@ export function Step8Paywall({
           type="button"
           whileTap={{ scale: 0.97 }}
           onClick={() => {
-            window.location.href = ctaHref;
+            window.location.href = plan === 'basico' ? CHECKOUT_ANUAL : CHECKOUT_MENSUAL;
           }}
           className="flex h-14 w-full items-center justify-center rounded-[var(--radius-button)] px-6 text-center text-[16px] font-bold text-white [touch-action:manipulation]"
           style={{

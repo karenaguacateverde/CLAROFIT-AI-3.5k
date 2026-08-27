@@ -94,7 +94,7 @@ export default function OnboardingPage() {
         )}
         {paso === 7 && <Step7Racha key="7" nombre={nombre} onContinuar={avanzar} />}
         {paso === 8 && objetivo && meta && (
-          <Step8Paywall key="8" nombre={nombre} objetivo={objetivo} meta={meta} ctaHref="/login" />
+          <Step8Paywall key="8" nombre={nombre} objetivo={objetivo} meta={meta} />
         )}
       </AnimatePresence>
     </OnboardingShell>
