@@ -122,6 +122,7 @@ export async function POST(req: Request) {
         reintento = data ?? null;
       }
       if (!reintento) {
+        console.error('webhook hotmart: error creando cuenta', { email, event, code: crearError?.code, msg: crearError?.message });
         await registrarLog(admin, eventId, event, 'error');
         return NextResponse.json({ error: 'no se pudo crear la cuenta' }, { status: 500 });
       }
@@ -132,11 +133,17 @@ export async function POST(req: Request) {
   }
 
   // 6. Autorización — no dejar que un evento viejo reactive un reembolso/chargeback.
-  const { data: perfilActual } = await admin
+  const { data: perfilActual, error: perfilError } = await admin
     .from('profiles')
     .select('plan_status, nombre')
     .eq('id', userId)
     .single();
+
+  if (perfilError) {
+    console.error('webhook hotmart: error leyendo perfil', { userId, event, code: perfilError.code, msg: perfilError.message });
+    await registrarLog(admin, eventId, event, 'error');
+    return NextResponse.json({ error: 'no se pudo leer el perfil' }, { status: 500 });
+  }
 
   const estadoActual = (perfilActual?.plan_status as PlanStatus) ?? null;
   if (!canTransition(estadoActual, newStatus)) {
@@ -144,12 +151,18 @@ export async function POST(req: Request) {
     return NextResponse.json({ received: true, ignored: 'transición no permitida' });
   }
 
-  const cambios: Record<string, unknown> = { plan_status: newStatus, subscriber_code: subscriberCode };
-  if (newStatus === 'trialing') cambios.trial_ends_at = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
-  if (newStatus === 'active' && estadoActual !== 'active') cambios.first_paid_at = new Date();
+  const cambios: Record<string, unknown> = { plan_status: newStatus };
+  if (subscriberCode) cambios.subscriber_code = subscriberCode;
+  if (newStatus === 'trialing') cambios.trial_ends_at = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
+  if (newStatus === 'active' && estadoActual !== 'active') cambios.first_paid_at = new Date().toISOString();
   if (!perfilActual?.nombre && nombre) cambios.nombre = nombre;
 
-  await admin.from('profiles').update(cambios).eq('id', userId);
+  const { error: updateError } = await admin.from('profiles').update(cambios).eq('id', userId);
+  if (updateError) {
+    console.error('webhook hotmart: error actualizando perfil', { userId, event, cambios, code: updateError.code, msg: updateError.message });
+    await registrarLog(admin, eventId, event, 'error');
+    return NextResponse.json({ error: 'no se pudo actualizar el perfil' }, { status: 500 });
+  }
 
   await registrarLog(admin, eventId, event, 'applied');
   return NextResponse.json({ received: true });
