@@ -1,16 +1,16 @@
-import { LegalLayout, LegalSeccion } from '@/components/legal/LegalLayout';
+import { LegalLayout, LegalSeccion, Resaltado } from '@/components/legal/LegalLayout';
 
 export default function ReembolsosPage() {
   return (
     <LegalLayout titulo="Política de Reembolsos" actualizado="26 de agosto de 2026">
       <LegalSeccion titulo="Garantía de 7 días">
         <p>
-          Si dentro de los <strong>7 días</strong> posteriores a tu primer pago no estás satisfecho con
-          Calofit AI, escríbenos a{' '}
+          Si dentro de los <Resaltado>7 días</Resaltado> posteriores a tu primer pago no estás satisfecho
+          con Calofit AI, escríbenos a{' '}
           <a href="mailto:luciahouse483@gmail.com" className="underline">
             luciahouse483@gmail.com
           </a>{' '}
-          y te devolvemos el 100% de tu dinero, sin preguntas.
+          y <Resaltado>te devolvemos el 100% de tu dinero, sin preguntas</Resaltado>.
         </p>
       </LegalSeccion>
 
@@ -36,9 +36,10 @@ export default function ReembolsosPage() {
 
       <LegalSeccion titulo="Cancelaciones y suscripciones futuras">
         <p>
-          Cancelar tu suscripción es tan fácil como contratarla: puedes hacerlo desde tu cuenta en Calofit
-          AI o directamente desde el portal de compras de Hotmart, en cualquier momento. Al cancelar dejas
-          de tener acceso al final del período que ya pagaste — no se te cobra de nuevo.
+          <Resaltado>Cancelar tu suscripción es tan fácil como contratarla</Resaltado>: puedes hacerlo
+          desde tu cuenta en Calofit AI o directamente desde el portal de compras de Hotmart, en cualquier
+          momento. Al cancelar dejas de tener acceso al final del período que ya pagaste — no se te cobra
+          de nuevo.
         </p>
       </LegalSeccion>
     </LegalLayout>

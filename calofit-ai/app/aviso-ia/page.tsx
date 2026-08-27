@@ -1,4 +1,4 @@
-import { LegalLayout, LegalSeccion } from '@/components/legal/LegalLayout';
+import { LegalLayout, LegalSeccion, Resaltado } from '@/components/legal/LegalLayout';
 
 export default function AvisoIAPage() {
   return (
@@ -6,14 +6,15 @@ export default function AvisoIAPage() {
       <LegalSeccion titulo="Esto es orientación, no consejo profesional">
         <p>
           Calofit AI usa un modelo de inteligencia artificial para estimar las calorías y macronutrientes
-          de una foto de tu comida. <strong>Esta estimación puede ser incorrecta o incompleta</strong> — la
-          IA puede confundir ingredientes, calcular mal las porciones, o no reconocer bien un plato poco
-          común.
+          de una foto de tu comida. <Resaltado>Esta estimación puede ser incorrecta o incompleta</Resaltado>{' '}
+          — la IA puede confundir ingredientes, calcular mal las porciones, o no reconocer bien un plato
+          poco común.
         </p>
         <p>
-          Los resultados que ves son <strong>orientación generada por IA, no consejo médico, nutricional
-          ni profesional de ningún tipo</strong>. Calofit AI no diagnostica condiciones de salud ni
-          reemplaza a un nutricionista, médico o profesional certificado.
+          Los resultados que ves son{' '}
+          <Resaltado>orientación generada por IA, no consejo médico, nutricional ni profesional de ningún
+          tipo</Resaltado>. Calofit AI no diagnostica condiciones de salud ni reemplaza a un
+          nutricionista, médico o profesional certificado.
         </p>
       </LegalSeccion>
 

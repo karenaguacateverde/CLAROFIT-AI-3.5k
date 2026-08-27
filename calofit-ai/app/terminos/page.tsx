@@ -1,4 +1,4 @@
-import { LegalLayout, LegalSeccion } from '@/components/legal/LegalLayout';
+import { LegalLayout, LegalSeccion, Resaltado } from '@/components/legal/LegalLayout';
 
 export default function TerminosPage() {
   return (
@@ -15,9 +15,10 @@ export default function TerminosPage() {
           ).
         </p>
         <p>
-          <strong>Lo que Calofit AI NO hace:</strong> no diagnostica condiciones médicas, no sustituye un
-          plan nutricional profesional, y las estimaciones de calorías/macros pueden tener errores — la IA
-          puede equivocarse, especialmente con platos poco comunes o fotos de mala calidad.
+          <Resaltado>Lo que Calofit AI NO hace:</Resaltado> no diagnostica condiciones médicas, no
+          sustituye un plan nutricional profesional, y las estimaciones de calorías/macros pueden tener
+          errores — la IA puede equivocarse, especialmente con platos poco comunes o fotos de mala
+          calidad.
         </p>
       </LegalSeccion>
 
@@ -47,8 +48,9 @@ export default function TerminosPage() {
           Calofit AI se contrata como una suscripción con renovación automática, procesada a través de{' '}
           <strong>Hotmart</strong>. El precio, la periodicidad (mensual o anual) y la fecha de tu próximo
           cobro se muestran claramente antes de que confirmes el pago. Puedes cancelar en cualquier momento
-          desde tu cuenta o el portal de compras de Hotmart — la cancelación es tan fácil como la
-          contratación, y deja de cobrarte desde el siguiente ciclo.
+          desde tu cuenta o el portal de compras de Hotmart —{' '}
+          <Resaltado>la cancelación es tan fácil como la contratación</Resaltado>, y deja de cobrarte
+          desde el siguiente ciclo.
         </p>
         <p>
           Ver también nuestra{' '}

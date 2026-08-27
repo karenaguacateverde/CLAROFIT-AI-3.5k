@@ -43,3 +43,8 @@ export function LegalSeccion({ titulo, children }: { titulo: string; children: R
     </section>
   );
 }
+
+/** Resalta una frase clave (garantías, plazos, derechos) — uso puntual, no decorativo. */
+export function Resaltado({ children }: { children: ReactNode }) {
+  return <strong className="font-semibold text-[var(--accent)]">{children}</strong>;
+}

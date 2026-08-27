@@ -1,12 +1,12 @@
-import { LegalLayout, LegalSeccion } from '@/components/legal/LegalLayout';
+import { LegalLayout, LegalSeccion, Resaltado } from '@/components/legal/LegalLayout';
 
 export default function PrivacidadPage() {
   return (
     <LegalLayout titulo="Política de Privacidad" actualizado="26 de agosto de 2026">
       <LegalSeccion titulo="1. Quién trata tus datos">
         <p>
-          Calofit AI es operada actualmente por <strong>[TU NOMBRE COMPLETO — pendiente de rellenar]</strong>,
-          persona física residente en España, hasta que se constituya una sociedad. Puedes contactarnos
+          Calofit AI es operada actualmente por <strong>Karen Barreño</strong>, persona física residente
+          en España, hasta que se constituya una sociedad. Puedes contactarnos
           en cualquier momento en{' '}
           <a href="mailto:luciahouse483@gmail.com" className="underline">
             luciahouse483@gmail.com
@@ -21,7 +21,7 @@ export default function PrivacidadPage() {
           <li>
             • <strong>Fotos de tus platos de comida</strong>, que envías para que la IA calcule calorías y
             macros. Las fotos se envían directamente al proveedor de IA para su análisis y{' '}
-            <strong>no se guardan en nuestros servidores</strong> — solo se guarda el resultado del
+            <Resaltado>no se guardan en nuestros servidores</Resaltado> — solo se guarda el resultado del
             análisis (el nombre del plato y sus calorías/macros), no la imagen.
           </li>
           <li>• <strong>Registros de comidas</strong> que analizas (plato, calorías, macros, fecha y hora).</li>
@@ -124,9 +124,9 @@ export default function PrivacidadPage() {
         </p>
         <ul className="flex flex-col gap-2">
           <li>
-            • <strong>Eliminar tu cuenta tú mismo, en cualquier momento:</strong> ve a tu Perfil dentro de
-            la app y toca "Eliminar mi cuenta". Esto borra tu perfil, tu historial de comidas y tu acceso
-            de inmediato, sin necesidad de escribirnos.
+            • <Resaltado>Eliminar tu cuenta tú mismo, en cualquier momento:</Resaltado> ve a tu Perfil
+            dentro de la app y toca "Eliminar mi cuenta". Esto borra tu perfil, tu historial de comidas y
+            tu acceso de inmediato, sin necesidad de escribirnos.
           </li>
           <li>
             • Para cualquier otro derecho (acceso, rectificación, portabilidad), escríbenos a{' '}
