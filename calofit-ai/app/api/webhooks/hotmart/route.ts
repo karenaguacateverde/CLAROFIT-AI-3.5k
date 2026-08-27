@@ -102,34 +102,18 @@ export async function POST(req: Request) {
   }
 
   // 5. Buscar o crear la cuenta (modelo onboarding-first: puede no existir todavía).
-  let userId: string | null = null;
-  const { data: userIdExistente } = await admin.rpc('buscar_usuario_id_por_email', { p_email: email });
-  userId = userIdExistente ?? null;
+  //    Atómico a nivel de base de datos (INSERT ... ON CONFLICT) — evita el bug real
+  //    de admin.auth.admin.createUser() fallando con "Database error creating new
+  //    user" cuando llegan varios eventos casi simultáneos con el mismo correo
+  //    (el botón "Enviar test" de Hotmart dispara 6+ a la vez).
+  const { data: userId, error: usuarioError } = await admin.rpc('buscar_o_crear_usuario_por_email', {
+    p_email: email,
+  });
 
-  if (!userId) {
-    const { data: nuevoUsuario, error: crearError } = await admin.auth.admin.createUser({
-      email,
-      email_confirm: true,
-    });
-    if (crearError || !nuevoUsuario?.user) {
-      // Carrera entre varios eventos casi simultáneos con el mismo correo (típico del botón
-      // "Enviar test" de Hotmart, que dispara 6+ eventos a la vez): reintenta con pequeñas
-      // esperas mientras el que sí ganó la carrera termina de confirmar su transacción.
-      let reintento: string | null = null;
-      for (let intento = 0; intento < 4 && !reintento; intento++) {
-        await new Promise((r) => setTimeout(r, 300));
-        const { data } = await admin.rpc('buscar_usuario_id_por_email', { p_email: email });
-        reintento = data ?? null;
-      }
-      if (!reintento) {
-        console.error('webhook hotmart: error creando cuenta', { email, event, code: crearError?.code, msg: crearError?.message });
-        await registrarLog(admin, eventId, event, 'error');
-        return NextResponse.json({ error: 'no se pudo crear la cuenta' }, { status: 500 });
-      }
-      userId = reintento;
-    } else {
-      userId = nuevoUsuario.user.id;
-    }
+  if (usuarioError || !userId) {
+    console.error('webhook hotmart: error creando/buscando cuenta', { email, event, code: usuarioError?.code, msg: usuarioError?.message });
+    await registrarLog(admin, eventId, event, 'error');
+    return NextResponse.json({ error: 'no se pudo crear la cuenta' }, { status: 500 });
   }
 
   // 6. Autorización — no dejar que un evento viejo reactive un reembolso/chargeback.
