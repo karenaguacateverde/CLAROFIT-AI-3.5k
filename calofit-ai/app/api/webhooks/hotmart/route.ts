@@ -13,6 +13,10 @@ import { NextResponse } from 'next/server';
 import { verifyHotmart } from '@/lib/hotmart-verify';
 import { statusForEvent, canTransition, type PlanStatus, PLAN_CHANGE_EVENT } from '@/lib/membership-fsm';
 import { crearClienteSupabaseAdmin } from '@/lib/supabase/admin';
+import { enviarCorreo } from '@/lib/resend';
+import { correoAcceso, correoBienvenida, correoDunning, correoCancelacion } from '@/lib/emails';
+
+const SITE_URL = 'https://www.tuemprendimientoencasaa.online';
 
 export const runtime = 'nodejs';
 
@@ -146,6 +150,39 @@ export async function POST(req: Request) {
     console.error('webhook hotmart: error actualizando perfil', { userId, event, cambios, code: updateError.code, msg: updateError.message });
     await registrarLog(admin, eventId, event, 'error');
     return NextResponse.json({ error: 'no se pudo actualizar el perfil' }, { status: 500 });
+  }
+
+  // 7. Correos automáticos según la transición — nunca deben tumbar el webhook si fallan.
+  try {
+    const esPrimerAcceso = (newStatus === 'trialing' || newStatus === 'active') && estadoActual === null;
+
+    if (esPrimerAcceso) {
+      const { data: linkData } = await admin.auth.admin.generateLink({
+        type: 'magiclink',
+        email,
+        options: { redirectTo: `${SITE_URL}/auth/callback` },
+      });
+      const link = linkData?.properties?.action_link;
+      if (link) {
+        const { asunto, html } = correoAcceso(link);
+        await enviarCorreo({ destinatario: email, asunto, html });
+      }
+      const bienvenida = correoBienvenida(nombre);
+      await enviarCorreo({ destinatario: email, asunto: bienvenida.asunto, html: bienvenida.html });
+    } else if (newStatus === 'past_due' && estadoActual !== 'past_due') {
+      const dunning = correoDunning();
+      await enviarCorreo({ destinatario: email, asunto: dunning.asunto, html: dunning.html });
+    } else if (newStatus === 'cancelled' && estadoActual !== 'cancelled') {
+      const cancelacion = correoCancelacion();
+      await enviarCorreo({ destinatario: email, asunto: cancelacion.asunto, html: cancelacion.html });
+    }
+    // refunded/chargeback: sin correo — el corte de acceso es silencioso por diseño.
+  } catch (e) {
+    console.error('webhook hotmart: error mandando correo (no bloquea el webhook)', {
+      email,
+      event,
+      error: e instanceof Error ? e.message : e,
+    });
   }
 
   await registrarLog(admin, eventId, event, 'applied');

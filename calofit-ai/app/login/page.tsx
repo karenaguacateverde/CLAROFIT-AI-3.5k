@@ -109,6 +109,13 @@ export default function LoginPage() {
           </form>
         )}
 
+        <a
+          href="/recuperar-acceso"
+          className="mt-4 block text-center text-[12px] font-semibold text-[var(--accent)] underline-offset-4 hover:underline"
+        >
+          ¿Compraste y no te llega el acceso?
+        </a>
+
         <p className="mt-6 text-center text-[12px] text-[var(--text-tertiary)]">
           Al continuar aceptas nuestros{' '}
           <a href="/terminos" className="underline">Términos</a> y{' '}
