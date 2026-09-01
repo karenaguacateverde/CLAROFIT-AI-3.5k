@@ -162,7 +162,10 @@ export async function POST(req: Request) {
         email,
         options: { redirectTo: `${SITE_URL}/auth/callback` },
       });
-      const link = linkData?.properties?.action_link;
+      const hashedToken = linkData?.properties?.hashed_token;
+      const link = hashedToken
+        ? `${SITE_URL}/auth/confirm?token_hash=${hashedToken}&type=magiclink&destino=/app`
+        : undefined;
       if (link) {
         const { asunto, html } = correoAcceso(link);
         await enviarCorreo({ destinatario: email, asunto, html });
