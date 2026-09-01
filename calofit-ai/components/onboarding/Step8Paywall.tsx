@@ -13,6 +13,7 @@ import { useState } from 'react';
 import { motion } from 'motion/react';
 import { Check } from 'lucide-react';
 import type { Objetivo } from './Step2Objetivo';
+import { trackMeta } from '@/components/MetaPixel';
 
 // Links reales del checkout de Hotmart (producto creado 2026-08-27).
 const CHECKOUT_ANUAL = 'https://pay.hotmart.com/X107349684K?off=rnlbgq2d';
@@ -200,6 +201,11 @@ export function Step8Paywall({
           type="button"
           whileTap={{ scale: 0.97 }}
           onClick={() => {
+            trackMeta('InitiateCheckout', {
+              value: plan === 'basico' ? 48 : 7,
+              currency: 'USD',
+              content_name: plan === 'basico' ? 'Plan Anual' : 'Plan Mensual',
+            });
             window.location.href = plan === 'basico' ? CHECKOUT_ANUAL : CHECKOUT_MENSUAL;
           }}
           className="flex h-14 w-full items-center justify-center rounded-[var(--radius-button)] px-6 text-center text-[16px] font-bold text-white [touch-action:manipulation]"

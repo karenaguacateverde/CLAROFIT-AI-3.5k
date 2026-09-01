@@ -93,6 +93,10 @@ export default function PrivacidadPage() {
             • <strong>Hotmart</strong> — procesa el pago de tu suscripción. Hotmart nunca nos comparte el
             número completo de tu tarjeta.
           </li>
+          <li>
+            • <strong>Meta (Facebook/Instagram)</strong> — solo si aceptaste el aviso de cookies, para
+            medir el rendimiento de nuestros anuncios.
+          </li>
         </ul>
       </LegalSeccion>
 
@@ -144,10 +148,15 @@ export default function PrivacidadPage() {
 
       <LegalSeccion titulo="8. Cookies">
         <p>
-          Calofit AI usa únicamente cookies técnicas necesarias para mantener tu sesión iniciada — no usamos
-          cookies de publicidad ni de analítica de terceros por ahora. Si en el futuro añadimos analítica
-          o publicidad, te lo pediremos con un aviso claro antes de activarla, con opción de aceptar o
-          rechazar igual de fácil.
+          Usamos cookies técnicas necesarias para mantener tu sesión iniciada — esas no se pueden
+          rechazar, son indispensables para que la app funcione.
+        </p>
+        <p>
+          También usamos el <strong>Píxel de Meta</strong> (Facebook/Instagram) para medir qué tan bien
+          funcionan nuestros anuncios — mide si alguien que vio un anuncio nuestro terminó usando la app.
+          Esta cookie <strong>solo se activa si tú la aceptas</strong> en el aviso que aparece al entrar
+          al sitio; puedes rechazarla y la app funciona igual. Meta procesa esa información según su
+          propia política de privacidad.
         </p>
       </LegalSeccion>
 
