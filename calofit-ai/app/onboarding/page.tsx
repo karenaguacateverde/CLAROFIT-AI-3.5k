@@ -8,8 +8,9 @@
 // técnicas). El botón final del paywall apunta a /login, que se construye en
 // la siguiente fase de la secuencia maestra (todavía no existe).
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AnimatePresence } from 'motion/react';
+import { registrarEvento } from '@/lib/analytics';
 import { OnboardingShell } from '@/components/onboarding/OnboardingShell';
 import { RecompensaToast } from '@/components/onboarding/RecompensaToast';
 import { Step1Nombre } from '@/components/onboarding/Step1Nombre';
@@ -33,6 +34,10 @@ export default function OnboardingPage() {
   const [meta, setMeta] = useState<number | null>(null);
   const [puntos, setPuntos] = useState(0);
   const [recompensaTrigger, setRecompensaTrigger] = useState(0);
+
+  useEffect(() => {
+    registrarEvento('onboarding_paso', { paso });
+  }, [paso]);
 
   const avanzar = () => {
     setPaso((p) => Math.min(p + 1, TOTAL_PASOS));

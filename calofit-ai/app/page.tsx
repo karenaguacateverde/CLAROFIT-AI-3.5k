@@ -5,12 +5,14 @@
 // components/landing/tokens.css (tematizados con FICHA-ARTE.md). No se reinterpreta
 // la estructura del kit — ver plantillas-codigo/landing/README.md.
 
+import { useEffect } from 'react';
 import {
   ChefHat,
   FileText,
   ListChecks,
   Target,
 } from 'lucide-react';
+import { registrarEvento } from '@/lib/analytics';
 import { Hero } from '@/components/landing/Hero';
 import { Logros } from '@/components/landing/Logros';
 import { AppPorDentro } from '@/components/landing/AppPorDentro';
@@ -31,6 +33,10 @@ const CTA_HREF = '/onboarding';
 const CTA_LABEL = 'Probar mi primer escaneo gratis';
 
 export default function LandingCalofitAI() {
+  useEffect(() => {
+    registrarEvento('landing_visto');
+  }, []);
+
   return (
     <div className="min-h-dvh bg-[var(--bg)] text-[var(--text-primary)] [font-family:var(--font-body)]">
       {/* 1. HERO */}
